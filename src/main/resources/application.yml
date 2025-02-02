@@ -1,0 +1,42 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: takeaway
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/reading?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: "161729"
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+  redis:
+    host: localhost
+    port: 6379
+    password: ""
+    database: 0
+  cache:
+    redis:
+      time-to-live: 1800000 #缓存过期时间
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 标注Mybatis配置文件的位置
+  #config-location: classpath:mybatis-config.xml
+  # 标注待解析的mapper的xml文件位置
+  #mapper-locations: classpath:mapper/*.xml
+  # 标注实体类位置
+  type-aliases-package: com.example.entity
+  # 开启mybatis驼峰式命名规则自动转换
+
+
