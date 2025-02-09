@@ -5,7 +5,7 @@
 //import org.example.entity.ReadRecord;
 //
 //@Mapper
-//public interface ReadRMapper {
+//public interface ReadMapper {
 //    @Select("SELECT * FROM ReadRecord WHERE UserId = #{userId} ORDER BY LastReadTime DESC LIMIT 1")
 //    ReadRecord getLastReadRecordByUser(@Param("userId") int userId);
 //

@@ -7,10 +7,10 @@
 //import java.util.List;
 //
 //@Repository
-//public interface ReadRRepository extends JpaRepository<ReadRecord,Integer> {
+//public interface ReadRepository extends JpaRepository<ReadRecord,Integer> {
 //    List<ReadRecord> findByUserId(int userId);
 //
-//    List<ReadRecord> findByBookId(int bookId);
+//  List<ReadRecord> findByBookId(int bookId);
 //
 //    List<ReadRecord> findByTypeId(int typeId);
 //}

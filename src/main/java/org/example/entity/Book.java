@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "Book")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +15,6 @@ public class Book {
 
     @Column(nullable = false, length = 255)
     private String bookName;
-
 
     @Column(length = 255)
     private String author;
@@ -26,16 +24,20 @@ public class Book {
 
     private String bookDesc;
 
-    private Integer bookPage;
+    private Integer bookPage;//chapter_cnt
 
     private Byte isCharge;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createTime;
 
-   private LocalDateTime updateTime;
+    private LocalDateTime updateTime;
 
-    private int bookTypeId;
+    @ManyToOne
+    @JoinColumn(name = "bookTypeId", nullable = false)
+    private BookType bookType;
+
     @Lob
     private byte[] epubFile;
+
 }

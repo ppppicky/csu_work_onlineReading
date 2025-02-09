@@ -1,13 +1,12 @@
-<!--<?xml version="1.0" encoding="UTF-8" ?>-->
-<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
-<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--&lt;!&ndash;<?xml version="1.0" encoding="UTF-8" ?>&ndash;&gt;-->
+<!--&lt;!&ndash;<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"&ndash;&gt;-->
+<!--&lt;!&ndash;        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">&ndash;&gt;-->
 
-<mapper namespace="com.example.mapper.BookMapper">
-    <select id="selectUsers" resultType="com.example.entity.Book">
-        SELECT *
-        FROM Users
-        LIMIT #{offset}, #{limit}
-    </select>
-</mapper>
-<mapper namespace="com.example.mapper.UsersMapper">
-
+<!--<mapper namespace="com.example.mapper.BookMapper">-->
+<!--    <select id="selectUsers" resultType="com.example.entity.Book">-->
+<!--        SELECT *-->
+<!--        FROM Users-->
+<!--        LIMIT #{offset}, #{limit}-->
+<!--    </select>-->
+<!--</mapper>-->
+<!--<mapper namespace="com.example.mapper.UsersMapper">-->

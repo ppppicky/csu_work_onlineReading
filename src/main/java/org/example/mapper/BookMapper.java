@@ -13,6 +13,6 @@ public interface BookMapper {
     @Update("UPDATE Book SET Is_Charge = #{isCharge} WHERE BookId = #{bookId}")
     void updateBookChargeStatus(@Param("bookId") int bookId, @Param("isCharge") boolean isCharge);
 
-    @Delete("delete from Book where BookId =#{bookId}")
+    @Delete("delete from book where book_id =#{bookId}")
     void deleteBook(@Param("bookId")int bookId);
 }

@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.Manager;
 import org.example.service.ManagerService;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
+@Api(value = "管理员控制器", tags = "管理员相关接口")
 @RequestMapping("/manager")
 public class ManagerController {
     @Autowired
@@ -65,6 +67,4 @@ public class ManagerController {
         session.removeAttribute("manager");
         return ResponseEntity.ok("退出成功");
     }
-
-
 }

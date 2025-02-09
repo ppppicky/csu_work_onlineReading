@@ -1,0 +1,56 @@
+package org.example.service.Impl;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.PaginatedContent;
+import org.example.entity.BookChapter;
+import org.example.repository.ChapterRepo;
+import org.example.service.ChapterService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ChapterSImpl implements ChapterService {
+    @Autowired
+    ChapterRepo chapterRepo;
+
+    /**
+     * 获取指定章节的内容、进行分页处理
+     * @param chapterId
+     * @param pageSize
+     * @return 返回分页内容和总页数
+     */
+    @Override
+    public PaginatedContent getChapterContent(Integer chapterId, int pageSize) {
+        BookChapter chapter=chapterRepo.findById(chapterId)
+                .orElseThrow(()->new RuntimeException("章节不存在"));
+        List<String> pages = splitContentToPages(chapter.getContent(), pageSize);
+        return new PaginatedContent(pages, pages.size());
+    }
+    @Override
+    public String getChapterContent(Integer chapterId){
+        BookChapter chapter=chapterRepo.findById(chapterId)
+                .orElseThrow(()->new RuntimeException("章节不存在"));
+        return chapter.getContent();
+    }
+    /**
+     * 根据页大小分割章节
+     * @param content
+     * @param pageSize
+     * @return 每页内容
+     */
+    private List<String> splitContentToPages(String content, int pageSize) {
+        List<String> pages = new ArrayList<>();  // 用于存储分页后的内容
+        int length = content.length();  // 获取内容的长度
+
+        for (int i = 0; i < length; i += pageSize) {
+            pages.add(content.substring(i, Math.min(i + pageSize, length)));  // 截取并添加每一页的内容
+        }
+        return pages;  // 返回分页后的内容列表
+    }
+}

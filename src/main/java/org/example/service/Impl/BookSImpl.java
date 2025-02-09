@@ -4,10 +4,16 @@ import nl.siegmann.epublib.domain.Metadata;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.Resources;
 import nl.siegmann.epublib.epub.EpubReader;
+import org.example.dto.ChapterVO;
 import org.example.entity.Book;
+import org.example.entity.BookChapter;
+import org.example.entity.BookType;
 import org.example.mapper.BookMapper;
+import org.example.repository.ChapterRepo;
 import org.example.repository.BookRepository;
+import org.example.repository.BookTypeRepository;
 import org.example.service.BookService;
+import org.example.util.EpubDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,19 +24,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class BookSImpl implements BookService {
 
+    @Autowired
     BookRepository bookRepository;
+    @Autowired
+    BookTypeRepository bookTypeRepository;
+    @Autowired
+    ChapterRepo chapterRepo;
+    @Autowired
     BookMapper bookMapper;
+
+     EpubDealer epubDealer=new EpubDealer();
 
     @Autowired
     public BookSImpl(BookRepository bookRepository, BookMapper bookMapper) {
@@ -45,12 +58,19 @@ public class BookSImpl implements BookService {
     }
 
     @Transactional
-    public Book addBook(File bookFile, int typeId) throws IOException {
+    public Book addBook(File bookFile, String typeName, Byte isVip) throws IOException {
+        BookType bookType;
+
+      try {
+          bookType = bookTypeRepository.findByBookTypeName(typeName);
+      }catch (Exception e){
+         throw new IllegalArgumentException("无效书籍类型"+typeName);
+      }
         nl.siegmann.epublib.domain.Book epubBook = new EpubReader().readEpub(new FileInputStream(bookFile));
         Resources resources = epubBook.getResources();
         Metadata metadata = epubBook.getMetadata();
         String bookName = epubBook.getTitle();
-        if (bookRepository.findByBookName(bookName)) {
+        if (bookRepository.findByBookName(bookName)!=null) {
             throw new RuntimeException("book existed");
         }
         String author = metadata.getAuthors().isEmpty() ? "Unknown" : String.valueOf(metadata.getAuthors().get(0));
@@ -58,39 +78,45 @@ public class BookSImpl implements BookService {
         String bookCover = null;
         for (Resource resource : resources.getAll()) {
             if (resource.getHref().contains("cover")) {
-                bookCover = saveCoverImage(resource.getData());
+                byte[] bytes= resource.getData();
+              bookCover=  epubDealer.saveCoverImage(bytes);
                 break;
             }
         }
-//        int pageCount = 0; // 获取页数的逻辑可以依赖于 EPUB 文件的具体结构
-//        if (epubBook.getContents() != null) {
-//            pageCount = epubBook.getContents().size();
-//        }
         Book newBook = new Book();
         newBook.setBookCover(bookCover);
-        //  newBook.setBookPage(pageCount);
         newBook.setAuthor(author);
         newBook.setBookName(bookName);
         newBook.setEpubFile(Files.readAllBytes(bookFile.toPath()));
-        newBook.setIsCharge((byte) 0);
+        newBook.setIsCharge(isVip);
         newBook.setCreateTime(LocalDateTime.now());
-        newBook.setBookTypeId(typeId);//待完善------
-        return bookRepository.save(newBook);
-    }
-
-    public String saveCoverImage(byte[] imageData) throws IOException {
-        String baseDir = System.getProperty("user.dir") + "/src/main/resources/static/covers/";
-        // 2. 生成唯一的封面图片名称
-        String fileName = UUID.randomUUID().toString() + ".jpg";
-        Files.write(Paths.get(baseDir, fileName), imageData);
-        return "/covers/" + fileName;//返回相对路径（供前端访问）
+        newBook.setBookPage(epubDealer.countChapters(epubBook));
+        newBook.setBookType(bookType);
+        bookRepository.save(newBook);
+        try (InputStream is =new FileInputStream(bookFile) ) {
+            List<BookChapter> chapters = epubDealer.parseChapters(newBook.getBookId(), is);
+            chapterRepo.saveAll(chapters);
+        }
+        return newBook;
     }
 
     @Override
-    public void DeleteBook(Integer bookId) {
-        bookMapper.deleteBook(bookId);
+    @Transactional
+    public void deleteBook(Integer bookId) {
+        Book book= bookRepository.findById(bookId).get();
+        try {
+            chapterRepo.deleteByBookId(bookId);
+            bookRepository.delete(book);
+        }catch (Exception e){
+            log.info("-------"+e.getLocalizedMessage());
+        }
     }
 
+    /**
+     *
+     * @param bookTypeId
+     * @return
+     */
     @Override
     public List<Book> getBooksByType(int bookTypeId) {
         return bookMapper.getBooksByCategory(bookTypeId).stream().map(map -> {
@@ -102,4 +128,18 @@ public class BookSImpl implements BookService {
             return book;
         }).collect(Collectors.toList());
     }
+
+
+    /**
+     * 获取章节目录
+     * @param bookId
+     * @return
+     */
+    @Override
+    public List<ChapterVO> getBookTOC(Integer bookId) {
+        return chapterRepo.findByBookId(bookId).stream()
+                .map(chap -> new ChapterVO(chap.getChapterId(), chap.getChapterName()))  // 将章节实体转为ChapterVO
+                .collect(Collectors.toList());
+    }
+
 }
