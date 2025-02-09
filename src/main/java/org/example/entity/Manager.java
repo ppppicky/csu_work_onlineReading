@@ -22,27 +22,4 @@ public class Manager implements Serializable {
     //@Column(nullable = false, length = 50)
     private String managerPassword;
 
-    public int getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(int managerId) {
-        this.managerId = managerId;
-    }
-
-    public String getManagerPassword() {
-        return managerPassword;
-    }
-
-    public void setManagerPassword(String managerPassword) {
-        this.managerPassword = managerPassword;
-    }
-
-    public String getManagerName() {
-        return managerName;
-    }
-
-    public void setManagerName(String managerName) {
-        this.managerName = managerName;
-    }
 }

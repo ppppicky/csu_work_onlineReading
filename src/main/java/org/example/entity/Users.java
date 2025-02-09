@@ -15,7 +15,6 @@ public class Users {
     private Integer userId;
 
   // @Column(nullable = false, length = 50)
-  @Column(name = "userName")
     private String userName;
 
     //@Column(nullable = false, length = 50)

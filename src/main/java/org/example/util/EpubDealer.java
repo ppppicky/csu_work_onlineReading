@@ -136,7 +136,7 @@ public class EpubDealer {
         }
 
         // 仍然找不到，返回默认值
-        System.out.println("⚠️ 无法获取章节名: " + res.getHref());
+        System.out.println("无法获取章节名: " + res.getHref());
         return "Unknown Chapter";
     }
 
@@ -190,7 +190,7 @@ public class EpubDealer {
                 return title.text().trim();
             }
         } catch (Exception e) {
-            System.out.println("❌ HTML 解析失败: " + e.getMessage());
+            System.out.println("HTML解析失败: " + e.getMessage());
         }
         return "";
     }
@@ -216,7 +216,7 @@ public class EpubDealer {
 
             return content.toString().trim();
         } catch (Exception e) {
-            System.out.println("❌ 解析章节内容失败: " + e.getMessage());
+            System.out.println("解析章节内容失败: " + e.getMessage());
             return "";
         }
     }

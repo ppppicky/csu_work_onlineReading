@@ -20,7 +20,7 @@ public class BookTypeController {
     BookTypeService bookTypeService;
 
     /**
-     *
+     *添加书籍类型
      * @param typeName
      * @param session
      * @return

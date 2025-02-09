@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import org.example.dto.ChapterVO;
 import org.example.service.BookService;
 import org.example.service.ChapterService;
+import org.example.service.ReadRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,8 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    ChapterService chapterService;
-
     /**
      * 添加书籍
-     *
      * @param file
      * @param typeName
      * @param isVip
@@ -55,12 +52,7 @@ public class BookController {
             return ResponseEntity.status(500).body("Error:" + e.getMessage());
         }
     }
-//    @PostMapping("/{bookId}/progress")
-//    public ResponseEntity<?> syncReadingProgress( @PathVariable String bookId,
-//                                                  @RequestBody ProgressDto dto,
-//                                                  @AuthenticationPrincipal Users user){
-//
-//    }
+
 
     /**
      * 获取图书目录信息
@@ -79,7 +71,6 @@ public class BookController {
 
     /**
      * 删除书籍
-     *
      * @param bookId
      * @param session
      * @return
