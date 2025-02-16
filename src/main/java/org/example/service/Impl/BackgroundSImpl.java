@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.BackgroundDTO;
 import org.example.entity.BackgroundResource;
 import org.example.entity.BackgroundType;
-import org.example.entity.ResourceType;
 import org.example.entity.Users;
 import org.example.repository.BackgroundRepo;
 import org.example.repository.UserRepository;

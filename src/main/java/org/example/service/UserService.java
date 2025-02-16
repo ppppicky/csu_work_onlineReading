@@ -1,20 +1,16 @@
-//package org.example.service;
-//
-//import org.example.entity.users;
-//import org.springframework.data.domain.Page;
-//
-//import java.math.BigDecimal;
-//
-//public interface UserService {
-//
-//    void register(users user);
-//
-//    users login(String userName, String password);
-//
-//    Page<users> getAllUsers(int page, int size);
-//
-//    void updateCredit(int userId, BigDecimal userCredit);
-//
-//    void logout(int userId);
-//    boolean findUser(String userName);
-//}
+package org.example.service;
+
+import org.example.entity.Users;
+import org.springframework.data.domain.Page;
+
+import java.math.BigDecimal;
+
+public interface UserService {
+
+
+    boolean findUser(String userName);
+
+    void register(Users user);
+
+    Users login(String userName, String userPassword);
+}

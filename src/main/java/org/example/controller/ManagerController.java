@@ -1,7 +1,9 @@
 package org.example.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.UserDTO;
 import org.example.entity.Manager;
 import org.example.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -67,4 +70,47 @@ public class ManagerController {
         session.removeAttribute("manager");
         return ResponseEntity.ok("退出成功");
     }
+
+    /**
+     * 获取用户列表，支持用户名模糊查询
+     * @param username 用户名（可选）
+     * @param page 页码
+     * @param size 每页大小
+     * @return 用户列表
+     */
+    @GetMapping("/users")
+    @ApiOperation(value = "获取用户列表")
+    public ResponseEntity<List<UserDTO>> getUserList(
+            @RequestParam(required = false) String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<UserDTO> users = managerService.getUsers(username, page, size);
+        return ResponseEntity.ok(users);
+    }
+
+    /**
+     * 启用/禁用用户账号
+     * @param username 用户名
+     * @param status 账号状态（1 启用，0 禁用）
+     * @return 操作结果
+     */
+    @PostMapping("/user/status")
+    @ApiOperation(value = "启用/禁用用户账号")
+    public ResponseEntity<String> updateUserStatus(
+            @RequestParam String username,
+            @RequestParam Integer status) {
+
+        if (status != 1 && status != 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid status value");
+        }
+
+        boolean result = managerService.updateUserStatus(username, status);
+        if (result) {
+            return ResponseEntity.ok("User status updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
 }

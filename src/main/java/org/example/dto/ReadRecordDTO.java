@@ -18,6 +18,6 @@ public class ReadRecordDTO {
     @PositiveOrZero(message = "页码不能为负数")
     private Integer lastReadPage;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastReadTime;
 }

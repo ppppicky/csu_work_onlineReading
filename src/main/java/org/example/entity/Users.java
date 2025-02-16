@@ -14,20 +14,24 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-  // @Column(nullable = false, length = 50)
+    // @Column(nullable = false, length = 50)
+    @Column(name = "userName")
     private String userName;
 
     //@Column(nullable = false, length = 50)
     private String userPassword;
 
     private Byte userSex; // 1 male, 0 female
-    private Byte isVIP; // 1 VIP, 0 non
+    private Byte isVip; // 1 VIP, 0 non
     private LocalDateTime vipTime;
 
     @Column(precision = 20, scale = 2)
     private BigDecimal userCredit;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime userRedgt;
+    @Column(updatable = false)
+    private LocalDateTime userRegTime;
+
+    @Column(nullable = false)
+    private Byte status = 1;  // 1 yes, 0 no
 
 }
