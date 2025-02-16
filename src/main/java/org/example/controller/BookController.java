@@ -6,8 +6,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.example.dto.ChapterVO;
 import org.example.service.BookService;
-import org.example.service.ChapterService;
-import org.example.service.ReadRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-@Api(tags = "图书管理接口")
+@Api(value = "图书管理接口", tags = "图书管理接口")
 @RestController
 @RequestMapping("/book")
 public class BookController {
@@ -35,7 +33,7 @@ public class BookController {
      */
     @ApiOperation(value = "添加书籍", notes = "上传EPUB文件并添加书籍到系统")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "书籍添加成功"),
+            @ApiResponse(code = 200, message = "书籍添加成功",response = String.class),
             @ApiResponse(code = 500, message = "服务器内部错误")
     })
     @PostMapping("/add")
@@ -61,7 +59,7 @@ public class BookController {
      */
     @ApiOperation(value = "获取书籍目录", notes = "根据书籍 ID 获取章节目录")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "返回章节目录列表"),
+            @ApiResponse(code = 200, message = "返回章节目录列表",response = ChapterVO.class),
             @ApiResponse(code = 404, message = "书籍未找到")
     })
     @GetMapping("/{bookId}/toc")
@@ -77,8 +75,8 @@ public class BookController {
      */
     @ApiOperation(value = "删除书籍", notes = "删除书籍及其相关章节")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "书籍删除成功"),
-            @ApiResponse(code = 500, message = "服务器内部错误")
+            @ApiResponse(code = 200, message = "书籍删除成功",response = String.class),
+            @ApiResponse(code = 500, message = "服务器内部错误",response = String.class)
     })
     @DeleteMapping("/delete/{bookId}")
     ResponseEntity<String> deleteBook(@PathVariable Integer bookId, HttpSession session) {

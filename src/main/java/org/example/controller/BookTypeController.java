@@ -1,6 +1,10 @@
 package org.example.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.example.dto.ChapterVO;
 import org.example.service.BookTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +29,11 @@ public class BookTypeController {
      * @param session
      * @return
      */
+    @ApiOperation(value = "添加书籍类型",tags = "添加书籍类型")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "booktype add successfully",response =String.class),
+            @ApiResponse(code = 404, message = "booktype existed")
+    })
     @PostMapping("/add")
     ResponseEntity<String> addBookType(@RequestBody String typeName , HttpSession session){
         try {
