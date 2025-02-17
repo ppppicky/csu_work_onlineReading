@@ -2,16 +2,15 @@ package org.example.util;
 
 
 import lombok.extern.slf4j.Slf4j;
-import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.Resource;
-import nl.siegmann.epublib.domain.TOCReference;
-import nl.siegmann.epublib.domain.TableOfContents;
+import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.EpubReader;
 import org.example.entity.BookChapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.io.IOException;
@@ -20,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,11 @@ import java.util.UUID;
 
 
 @Slf4j
+@Component
 public class EpubDealer {
+    @Autowired
+    ContentFilter contentFilter;
+
     /**
      * 保存封面图片到本地
      *
@@ -78,20 +82,7 @@ public class EpubDealer {
         Book epubBook = new EpubReader().readEpub(epubStream);
         List<BookChapter> chapters = new ArrayList<>();
         int chapterNum = 1;
-//        for (Resource res : epubBook.getContents()) {
-//            try {
-//                BookChapter chapter = new BookChapter();
-//                chapter.setBookId(bookId);
-//                chapter.setChapterNum(chapterNum++);
-//                chapter.setChapterName(extractChapterName(res));
-//                chapter.setContent(cleanContent(res));
-//                chapter.setCreateTime(LocalDateTime.now());
-//                chapter.setUpdateTime(LocalDateTime.now());
-//                chapters.add(chapter);
-//            } catch (Exception e) {
-//                log.error("解析章节失败: {}", res.getHref(), e);
-//            }
-//        }
+
         TableOfContents toc = epubBook.getTableOfContents();
 
         for (TOCReference ref : toc.getTocReferences()) {
@@ -123,7 +114,7 @@ public class EpubDealer {
     }
 
     private String extractChapterName(Book epubBook, Resource res) {
-        // 1️尝试从 EPUB 目录匹配章节名
+        // 尝试从 EPUB 目录匹配章节名
         Optional<String> tocTitle = findChapterTitleFromTOC(epubBook, res);
         if (tocTitle.isPresent()) {
             return tocTitle.get();
@@ -214,50 +205,90 @@ public class EpubDealer {
                 content.append(p.text()).append("\n\n");
             }
 
-            return content.toString().trim();
+            String rawContent = content.toString().trim();
+            return contentFilter.filter(rawContent);
         } catch (Exception e) {
-            System.out.println("解析章节内容失败: " + e.getMessage());
+            System.out.println("解析章节内容失败: " + e.getLocalizedMessage());
             return "";
         }
     }
 
+    public String extractBookDescription(Book epubBook) {
+        // 1. **尝试从元数据中获取描述**
+        String description = epubBook.getMetadata().getDescriptions().stream()
+                .findFirst()
+                .orElse("");
 
-//    /**
-//     *提取章节名称
-//     * @param res
-//     * @return
-//     */
-//    private String extractChapterName(Resource res) {
-//        // 优先使用资源的标题
-//        if (res.getTitle() != null && !res.getTitle().trim().isEmpty()) {
-//            return res.getTitle().trim();
-//        }
-//
-//        String href = res.getHref();
-//        log.info("Processing href: " + href);
-//
-//        // 优先匹配包含更详细章节信息的格式，例如 chapter_1_intro.html
-//        Pattern detailedPattern = Pattern.compile("chapter_(\\d+)_([a-zA-Z0-9]+)\\.html");
-//        Matcher detailedMatcher = detailedPattern.matcher(href);
-//        if (detailedMatcher.find()) {
-//            return "Chapter " + detailedMatcher.group(1) + ": " + detailedMatcher.group(2);
-//        }
-//
-//        // 匹配 split_1.html 这样的格式
-//        Pattern simplePattern = Pattern.compile("split_(\\d+)\\.html");
-//        Matcher simpleMatcher = simplePattern.matcher(href);
-//        if (simpleMatcher.find()) {
-//            return "Chapter " + simpleMatcher.group(1);
-//        }
-//
-//        // 匹配中文章节名，例如 "第1章_引言.html"
-//        Pattern chinesePattern = Pattern.compile("第(\\d+)章_?([^.]*)\\.html");
-//        Matcher chineseMatcher = chinesePattern.matcher(href);
-//        if (chineseMatcher.find()) {
-//            return "Chapter " + chineseMatcher.group(1) + (chineseMatcher.group(2).isEmpty() ? "" : ": " + chineseMatcher.group(2));
-//        }
-//
-//        log.warn("Failed to extract chapter name from href: " + href);
-//        return "Unknown Chapter";
-//    }
+        if (!description.isEmpty()) {
+            log.info("从元数据中找到简介: {}", description);
+            return description;
+        }
+
+        // 2. **如果元数据中没有描述，尝试从正文内容中提取**
+        for (Resource resource : epubBook.getResources().getAll()) {
+            if (resource.getMediaType().toString().contains("html")) {
+                try {
+                    String content = new String(resource.getData(), StandardCharsets.UTF_8);
+                    Document doc = Jsoup.parse(content);
+
+                    // **查找 p 标签中的第一段内容**
+                    Element firstParagraph = doc.selectFirst("p");
+                    if (firstParagraph != null) {
+                        String text = firstParagraph.text().trim();
+                        if (!text.isEmpty() && text.length() > 50) { // 只选取长度足够的文本
+                            log.info("从正文中找到简介: {}", text);
+                            return text;
+                        }
+                    }
+                } catch (Exception e) {
+                    log.warn("解析 HTML 获取简介失败: {}", e.getMessage());
+                }
+            }
+        }
+        log.warn("未找到书籍简介");
+        return "暂无简介";
+    }
+
+    public LocalDateTime extractBookCreationDate(Book epubBook) {
+        List<Date> dates = epubBook.getMetadata().getDates();
+        if (dates.isEmpty()) {
+            return LocalDateTime.now();
+        }
+
+        LocalDateTime creationDate = convertEpubDateToLocalDateTime(dates.get(0));
+        return creationDate != null ? creationDate : LocalDateTime.now();
+    }
+
+    LocalDateTime convertEpubDateToLocalDateTime(Date epubDate) {
+        if (epubDate == null || epubDate.getValue() == null || epubDate.getValue().trim().isEmpty()) {
+            return null;
+        }
+
+        String dateStr = epubDate.getValue().trim();
+        LocalDateTime dateTime = null;
+
+        // 尝试多种格式进行解析
+        DateTimeFormatter[] formatters = {
+                DateTimeFormatter.ISO_DATE_TIME,       // 2023-06-15T14:30:00Z
+                DateTimeFormatter.ISO_LOCAL_DATE,      // 2023-06-15
+                DateTimeFormatter.ofPattern("yyyy-MM"), // 2023-06
+                DateTimeFormatter.ofPattern("yyyy")    // 2023
+        };
+
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                dateTime = LocalDateTime.parse(dateStr, formatter);
+                break;
+            } catch (Exception ignored) {
+            }
+        }
+
+        // 处理只有年份的情况
+        if (dateTime == null && dateStr.matches("\\d{4}")) {
+            dateTime = LocalDateTime.of(Integer.parseInt(dateStr), 1, 1, 0, 0);
+        }
+
+        return dateTime;
+    }
+
 }

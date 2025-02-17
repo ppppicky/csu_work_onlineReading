@@ -4,46 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增阅读页面个性化设置">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/UserDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/5e79d898-5fe4-46d9-a93b-517a48a69a66_4CABD89E7D6ADF3731F2341B2E1F470C.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/b579f114-e2b4-45f8-ac80-68d560bbc88b_gradient.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/c45ee2f6-4282-46af-9236-4d4967989ed2_4CABD89E7D6ADF3731F2341B2E1F470C.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/edac4a57-cb22-4e89-91be-394f43e21d82_4afe01974be8afa6764e061c0d3cd38e.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/03975ed4-55d8-49f4-9976-fad1c8b14b8e_8e679f4e6489ff0ea5844c4b151a15c2.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/112298fd-61f6-49dc-a541-548ef645cd66_8e679f4e6489ff0ea5844c4b151a15c2.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/9905c69d-9429-42de-b64a-d1b354ec1171_8e679f4e6489ff0ea5844c4b151a15c2.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/9dd7fd75-b289-433f-8477-034a9a990617_屏幕截图 2025-02-14 232110.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/b0a30c4c-1f9b-42ca-a656-8b543cffe027_4CABD89E7D6ADF3731F2341B2E1F470C.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/112298fd-61f6-49dc-a541-548ef645cd66_8e679f4e6489ff0ea5844c4b151a15c2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/5e79d898-5fe4-46d9-a93b-517a48a69a66_4CABD89E7D6ADF3731F2341B2E1F470C.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/9dd7fd75-b289-433f-8477-034a9a990617_屏幕截图 2025-02-14 232110.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/b0a30c4c-1f9b-42ca-a656-8b543cffe027_4CABD89E7D6ADF3731F2341B2E1F470C.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/b579f114-e2b4-45f8-ac80-68d560bbc88b_gradient.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/c45ee2f6-4282-46af-9236-4d4967989ed2_4CABD89E7D6ADF3731F2341B2E1F470C.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/edac4a57-cb22-4e89-91be-394f43e21d82_4afe01974be8afa6764e061c0d3cd38e.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/080c4083-abaa-4044-ac17-8fdc7078038f.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/15ecc9f9-e0f6-40b4-92ea-69a749673db9.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/2e880a34-9693-44cb-9122-0aaeeb09c949.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/899bd6f6-44e0-4c28-8efc-ff499ef6eb52.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/94377419-d31a-4ac9-97e4-32b1017112f3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/aef22a79-5777-4795-8513-1c24efcaa92f.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/b459e93a-30b4-4524-a307-fa5aef6fa132.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/c7e021a9-9be6-4f7b-9967-71754e92e9e2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/cf6cd91c-4816-422e-ac2f-3f3911eed85d.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/d30b3d63-d235-401f-99a7-fdf33da47529.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/dd22888b-e8ae-4c98-be4e-dce832afeffe.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/covers/ec1b71c0-800b-4ec0-bf0b-b033547a9d3c.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/fonts/CELINGDHS_ZHUN--GB1-0.ttf" afterDir="false" />
+    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增阅读页面个性化、整合用户管理设置">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/common/BaseContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/common/CommonLocation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/config/LoginCheckFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ForbiddenWordController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/BookInfoDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ForbiddenWord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/ForbiddenWordRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ForbiddenService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ForbiddenSImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/util/ContentFilter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/ReadRecordDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/ReadRecordDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/mapper/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ChapterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ChapterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Book.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ChapterService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ChapterService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BackgroundSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BackgroundSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ManagerSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ManagerSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/UserSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/UserSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ManagerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,12 +44,21 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="master-3" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PerforceDirect.Settings">
+    <option name="CHARSET" value="无" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -84,7 +77,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master-2",
+    "git-widget-placeholder": "master-4",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/Idea_workspace/untitled/src/main/java/org/example/dto",
@@ -97,14 +90,18 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\dto" />
       <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\service\Impl" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\controller" />
       <recent name="D:\Idea_workspace\untitled\src\main\resources\front\manager" />
       <recent name="D:\Idea_workspace\untitled\src\main\resources\front" />
       <recent name="D:\Idea_workspace\untitled\src\main\resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.example.common" />
+      <recent name="org.example.config" />
       <recent name="org.example.json" />
     </key>
   </component>
@@ -176,7 +173,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739692816541</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="新增阅读页面个性化、整合用户管理设置">
+      <option name="closed" value="true" />
+      <created>1739693766544</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1739693766544</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -184,7 +189,8 @@
     <MESSAGE value="添加书籍功能完善，新增删除书籍、获取章节内容" />
     <MESSAGE value="新增保存阅读记录功能" />
     <MESSAGE value="新增阅读页面个性化设置" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增阅读页面个性化设置" />
+    <MESSAGE value="新增阅读页面个性化、整合用户管理设置" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增阅读页面个性化、整合用户管理设置" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ServletComponentScan
 @ComponentScan("org.example.mapper")
 @ComponentScan("org.example.config")
+@ComponentScan("org.example.util")
 @EnableTransactionManagement
 @SpringBootApplication
 @EnableCaching

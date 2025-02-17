@@ -4,6 +4,7 @@ import nl.siegmann.epublib.domain.Metadata;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.Resources;
 import nl.siegmann.epublib.epub.EpubReader;
+import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterVO;
 import org.example.entity.Book;
 import org.example.entity.BookChapter;
@@ -43,7 +44,8 @@ public class BookSImpl implements BookService {
     @Autowired
     BookMapper bookMapper;
 
-     EpubDealer epubDealer=new EpubDealer();
+    @Autowired
+     EpubDealer epubDealer;
 
     @Autowired
     public BookSImpl(BookRepository bookRepository, BookMapper bookMapper) {
@@ -83,15 +85,18 @@ public class BookSImpl implements BookService {
                 break;
             }
         }
+
         Book newBook = new Book();
         newBook.setBookCover(bookCover);
         newBook.setAuthor(author);
         newBook.setBookName(bookName);
         newBook.setEpubFile(Files.readAllBytes(bookFile.toPath()));
         newBook.setIsCharge(isVip);
-        newBook.setCreateTime(LocalDateTime.now());
+        newBook.setBookDesc(epubDealer.extractBookDescription(epubBook));
         newBook.setBookPage(epubDealer.countChapters(epubBook));
         newBook.setBookType(bookType);
+        newBook.setCreateTime(epubDealer.extractBookCreationDate(epubBook));
+        newBook.setUpdateTime(LocalDateTime.now());
         bookRepository.save(newBook);
         try (InputStream is =new FileInputStream(bookFile) ) {
             List<BookChapter> chapters = epubDealer.parseChapters(newBook.getBookId(), is);
@@ -140,6 +145,37 @@ public class BookSImpl implements BookService {
         return chapterRepo.findByBookId(bookId).stream()
                 .map(chap -> new ChapterVO(chap.getChapterId(), chap.getChapterName()))  // 将章节实体转为ChapterVO
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public BookInfoDTO getBook(Integer bookId) {
+       Book book= bookRepository.findById(bookId)
+               .orElseThrow(()->new IllegalArgumentException("book not existed"));
+       BookInfoDTO bookInfoDTO=new BookInfoDTO();
+       bookInfoDTO.setBookCover(book.getBookCover());
+       bookInfoDTO.setBookDesc(book.getBookDesc());
+       bookInfoDTO.setBookPage(book.getBookPage());
+       bookInfoDTO.setAuthor(book.getAuthor());
+       bookInfoDTO.setBookId(bookId);
+       bookInfoDTO.setIsCharge(book.getIsCharge());
+       bookInfoDTO.setBookType(book.getBookType());
+       bookInfoDTO.setBookName(book.getBookName());
+       return bookInfoDTO;
+    }
+
+    @Override
+    public void updateBook(BookInfoDTO bookInfoDTO) {
+        Book book= bookRepository.findById(bookInfoDTO.getBookId())
+                .orElseThrow(()->new IllegalArgumentException("book not existed"));
+        book.setBookType(bookInfoDTO.getBookType());
+        book.setBookPage(bookInfoDTO.getBookPage());
+        book.setBookCover(bookInfoDTO.getBookCover());
+        book.setBookName(bookInfoDTO.getBookName());
+        book.setAuthor(bookInfoDTO.getAuthor());
+        book.setBookDesc(bookInfoDTO.getBookDesc());
+        book.setIsCharge(bookInfoDTO.getIsCharge());
+        book.setUpdateTime(LocalDateTime.now());
+        bookRepository.save(book);
     }
 
 }

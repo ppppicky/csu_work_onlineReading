@@ -4,9 +4,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterVO;
+import org.example.repository.ForbiddenWordRepo;
 import org.example.service.BookService;
+import org.example.util.ContentFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,12 +21,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Api(value = "图书管理接口", tags = "图书管理接口")
 @RestController
 @RequestMapping("/book")
 public class BookController {
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    ForbiddenWordRepo forbiddenWordRepo;
 
     /**
      * 添加书籍
@@ -50,7 +59,6 @@ public class BookController {
             return ResponseEntity.status(500).body("Error:" + e.getMessage());
         }
     }
-
 
     /**
      * 获取图书目录信息
@@ -87,4 +95,26 @@ public class BookController {
             return ResponseEntity.status(500).body("Deletion failed: " + e.getMessage());
         }
     }
+
+    @GetMapping("/{bookId}")
+    ResponseEntity<BookInfoDTO>getBookInfo(@PathVariable Integer bookId, HttpSession session){
+        BookInfoDTO bookInfoDTO=new BookInfoDTO();
+      try {
+          return ResponseEntity.ok().body(bookService.getBook(bookId));
+      }catch (Exception e){
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      }
+
+    }
+    @PostMapping("/update")
+    ResponseEntity<String> updateBook(@RequestBody BookInfoDTO bookInfoDTO, HttpSession session){
+       try {
+           bookService.updateBook(bookInfoDTO);
+           return ResponseEntity.ok("update successfully");
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+       }
+    }
+
+
 }

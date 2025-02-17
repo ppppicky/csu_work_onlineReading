@@ -3,12 +3,16 @@ package org.example.service.Impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.PaginatedContent;
+import org.example.entity.Book;
 import org.example.entity.BookChapter;
+import org.example.repository.BookRepository;
 import org.example.repository.ChapterRepo;
 import org.example.service.ChapterService;
+import org.example.util.ContentFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +23,11 @@ public class ChapterSImpl implements ChapterService {
     @Autowired
     ChapterRepo chapterRepo;
 
-    /**
+    @Autowired
+    BookRepository bookRepository;
+@Autowired
+    ContentFilter contentFilter;
+/**
      * 获取指定章节的内容、进行分页处理
      * @param chapterId
      * @param pageSize
@@ -38,6 +46,33 @@ public class ChapterSImpl implements ChapterService {
                 .orElseThrow(()->new RuntimeException("章节不存在"));
         return chapter.getContent();
     }
+
+    @Override
+    public void updateChapterContent(Integer chapterId, String newContent) {
+       String filteredContent= contentFilter.filter(newContent);
+       BookChapter chapter= chapterRepo.findById(chapterId)
+               .orElseThrow(()->new IllegalArgumentException("chapter not existed"));
+       chapter.setContent(filteredContent);
+       chapter.setUpdateTime(LocalDateTime.now());
+        Book book=bookRepository.findById( chapter.getBookId()).get();
+        book.setUpdateTime(LocalDateTime.now());
+        bookRepository.save(book);
+       chapterRepo.save(chapter);
+    }
+
+    @Override
+    public void updateChapterName(Integer chapterId, String newName) {
+        String filteredContent= contentFilter.filter(newName);
+        BookChapter chapter= chapterRepo.findById(chapterId)
+                .orElseThrow(()->new IllegalArgumentException("chapter not existed"));
+        chapter.setChapterName(filteredContent);
+        chapter.setUpdateTime(LocalDateTime.now());
+        Book book=bookRepository.findById( chapter.getBookId()).get();
+        book.setUpdateTime(LocalDateTime.now());
+        bookRepository.save(book);
+        chapterRepo.save(chapter);
+    }
+
     /**
      * 根据页大小分割章节
      * @param content

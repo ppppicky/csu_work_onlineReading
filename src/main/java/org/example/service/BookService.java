@@ -1,8 +1,10 @@
 package org.example.service;
 
+import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterVO;
 import org.example.entity.Book;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +22,10 @@ public interface BookService {
 
     public List<Book> getBooksByType(int bookTypeId);
     List<ChapterVO> getBookTOC(Integer bookId);
+
+    BookInfoDTO getBook(Integer bookId);
+
+    void updateBook(BookInfoDTO bookInfoDTO);
 
 //    public BigDecimal getTotalRevenue() {
 //        return dashboardMapper.calculateTotalRevenue();

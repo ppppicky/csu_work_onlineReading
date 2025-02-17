@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.example.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class ChapterController {
     @Autowired
     ChapterService chapterService;
-
-    /**
+/**
      * @param chapterId
      * @param pageSize  页大小（默认为1000）
      * @return
@@ -33,4 +34,26 @@ public class ChapterController {
 
         return chapterService.getChapterContent(chapterId);//不分页
     }
+    // 在ChapterController.java中添加
+    @ApiOperation(value = "管理员修改章节内容", notes = "需要管理员权限")
+   // @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/update/{chapterId}")
+    public ResponseEntity<String> updateChapterContent(
+            @PathVariable Integer chapterId,
+            @RequestBody String newContent) {
+
+        // 这里需要实现章节服务中的更新方法
+        chapterService.updateChapterContent(chapterId,newContent);
+        return ResponseEntity.ok("update successfully");
+    }
+    @PutMapping("/updatename/{chapterId}")
+    public ResponseEntity<String> updateChapterName(
+            @PathVariable Integer chapterId,
+            @RequestBody String newName) {
+
+        // 这里需要实现章节服务中的更新方法
+        chapterService.updateChapterName(chapterId,newName);
+        return ResponseEntity.ok("update successfully");
+    }
+
 }
