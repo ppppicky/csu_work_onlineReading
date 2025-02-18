@@ -1,15 +1,17 @@
 package org.example.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.sun.org.apache.regexp.internal.RE;
+import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.ChapterDTO;
 import org.example.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 
 @Api(tags = "章节管理接口")
@@ -34,26 +36,60 @@ public class ChapterController {
 
         return chapterService.getChapterContent(chapterId);//不分页
     }
-    // 在ChapterController.java中添加
-    @ApiOperation(value = "管理员修改章节内容", notes = "需要管理员权限")
+
+
+
+    @ApiOperation(value = "更新章节内容", notes = "需要管理员权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "chapterId", value = "章节ID", required = true, dataType = "integer", paramType = "path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功更新章节内容", response = String.class),
+            @ApiResponse(code = 400, message = "非法参数"),
+            @ApiResponse(code = 404, message = "未找到章节")
+    })
    // @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{chapterId}")
     public ResponseEntity<String> updateChapterContent(
             @PathVariable Integer chapterId,
             @RequestBody String newContent) {
 
-        // 这里需要实现章节服务中的更新方法
         chapterService.updateChapterContent(chapterId,newContent);
         return ResponseEntity.ok("update successfully");
     }
+
+    @ApiOperation(value = "更新章节名称", notes = "需要管理员权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "chapterId", value = "章节ID", required = true, dataType = "integer", paramType = "path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功更新章节名称", response = String.class),
+            @ApiResponse(code = 400, message = "非法参数"),
+            @ApiResponse(code = 404, message = "未找到章节")
+    })
     @PutMapping("/updatename/{chapterId}")
     public ResponseEntity<String> updateChapterName(
-            @PathVariable Integer chapterId,
-            @RequestBody String newName) {
-
-        // 这里需要实现章节服务中的更新方法
+            @PathVariable Integer chapterId, @RequestBody String newName) {
         chapterService.updateChapterName(chapterId,newName);
         return ResponseEntity.ok("update successfully");
+    }
+
+    @ApiOperation(value = "创建章节", notes = "根据书籍ID创建新章节")
+    @ApiImplicitParam(name = "bookId", value = "书籍ID", required = true, dataType = "integer", paramType = "path")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功创建章节", response = String.class),
+            @ApiResponse(code = 400, message = "非法参数"),
+            @ApiResponse(code = 404, message = "未找到书籍")
+    })
+    @PostMapping("/create/{bookId}")
+    public ResponseEntity<String> createChapter(
+            @PathVariable Integer bookId, @RequestBody ChapterDTO chapterDTO) {
+        try {
+            chapterService.createChapter(bookId, chapterDTO);
+            return ResponseEntity.ok().body("create chapter successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }

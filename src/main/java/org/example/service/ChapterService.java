@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.dto.ChapterDTO;
 import org.example.dto.PaginatedContent;
 import org.springframework.stereotype.Service;
 
@@ -14,4 +15,6 @@ public interface ChapterService {
     void updateChapterContent(Integer chapterId, String newContent);
 
     void updateChapterName(Integer chapterId, String newName);
+
+    void createChapter(Integer bookId, ChapterDTO chapterDTO);
 }

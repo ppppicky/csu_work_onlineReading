@@ -5,15 +5,15 @@ import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.Resources;
 import nl.siegmann.epublib.epub.EpubReader;
 import org.example.dto.BookInfoDTO;
-import org.example.dto.ChapterVO;
-import org.example.entity.Book;
-import org.example.entity.BookChapter;
-import org.example.entity.BookType;
+import org.example.dto.ChapterDTO;
+import org.example.dto.CoverTempDTO;
+import org.example.entity.*;
 import org.example.mapper.BookMapper;
 import org.example.repository.ChapterRepo;
 import org.example.repository.BookRepository;
 import org.example.repository.BookTypeRepository;
 import org.example.service.BookService;
+import org.example.service.CoverTempService;
 import org.example.util.EpubDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,7 +45,10 @@ public class BookSImpl implements BookService {
     BookMapper bookMapper;
 
     @Autowired
+    CoverTempService coverTempService;
+    @Autowired
      EpubDealer epubDealer;
+    private final String STATICDIR = System.getProperty("user.dir") + "/src/main/resources/static";
 
     @Autowired
     public BookSImpl(BookRepository bookRepository, BookMapper bookMapper) {
@@ -141,9 +144,9 @@ public class BookSImpl implements BookService {
      * @return
      */
     @Override
-    public List<ChapterVO> getBookTOC(Integer bookId) {
+    public List<ChapterDTO> getBookTOC(Integer bookId) {
         return chapterRepo.findByBookId(bookId).stream()
-                .map(chap -> new ChapterVO(chap.getChapterId(), chap.getChapterName()))  // 将章节实体转为ChapterVO
+                .map(chap -> new ChapterDTO(chap.getChapterId(), chap.getChapterName()))  // 将章节实体转为ChapterVO
                 .collect(Collectors.toList());
     }
 
@@ -176,6 +179,30 @@ public class BookSImpl implements BookService {
         book.setIsCharge(bookInfoDTO.getIsCharge());
         book.setUpdateTime(LocalDateTime.now());
         bookRepository.save(book);
+    }
+
+    @Override
+    public Book createBook(BookInfoDTO bookInfoDTO) throws IOException {
+        Book book=new Book();
+        if (bookInfoDTO.getBookCover() != null) {
+            CoverTempDTO tempDTO = coverTempService.getTempCover(bookInfoDTO.getBookCover());
+            book.setBookCover(tempDTO.getPreviewUrl());
+         //   log.info("dddddd"+finalPath);
+        }
+
+        coverTempService.deleteTempCover(bookInfoDTO.getBookCover()); // 确认保存后删除 Redis 记录
+
+        book.setBookType(bookInfoDTO.getBookType());
+        book.setBookPage(bookInfoDTO.getBookPage());
+
+        book.setBookName(bookInfoDTO.getBookName());
+        book.setAuthor(bookInfoDTO.getAuthor());
+        book.setBookDesc(bookInfoDTO.getBookDesc());
+        book.setIsCharge(bookInfoDTO.getIsCharge());
+        book.setUpdateTime(LocalDateTime.now());
+        book.setCreateTime(LocalDateTime.now());
+        bookRepository.save(book);
+        return book;
     }
 
 }
