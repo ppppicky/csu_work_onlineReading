@@ -57,30 +57,6 @@ public class ReadSImpl implements ReadService {
 //        return readMapper.getLastReadRecordByUser(users.getUserId());
 //    }
 
-    /**
-     * 处理新的阅读记录
-     * @param dto
-     */
-    @Transactional
-    @Override
-    public void processNewRecord(ReadRecordDTO dto) {
-        Users user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new GlobalException.UserNotFoundException("user not existed"));
-        Book book = bookRepository.findById(dto.getBookId())
-                .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
-        if (dto.getLastReadPage() != null && dto.getLastReadPage() > book.getBookPage()) {
-            throw new GlobalException.InvalidPageException("page out of index");
-        }
-        ReadRecord record = readRepository.findByUsersAndBook(user, book)
-                .orElse(new ReadRecord(user, book));
-
-        record.setUsers(record.getUsers());
-        record.setBook(record.getBook());
-        record.setLastReadPage(dto.getLastReadPage());
-        record.setLastReadTime(dto.getLastReadTime() != null
-                ? dto.getLastReadTime() : LocalDateTime.now());
-        readRepository.save(record);
-    }
 
     /**
      * 获取所有可用字体资源

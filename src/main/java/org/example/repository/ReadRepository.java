@@ -11,9 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface ReadRepository extends JpaRepository<ReadRecord,Integer> {
-    List<ReadRecord> findByUsers(Users users);
 
     List<ReadRecord> findByBook(Book book);
 
-    Optional<ReadRecord> findByUsersAndBook(Users users, Book book);
+    Optional<ReadRecord> findByUserAndBook(Users users, Book book);
+
+    List<ReadRecord> findByUser(Users users);
 }

@@ -4,21 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增获取图书信息、修改书籍信息、章节内容违禁词过滤、手动修改章节内容/标题等功能">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/CoverTempDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/CoverTempService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/CoverTempSImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" afterDir="false" />
+    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增获取与修改书籍信息、修改章节内容/标题、临时封面存储、创建书籍（封面移入永久目录）、创建章节功能">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadRecordController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadRecordSImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ReadRecordService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookTypeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookTypeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ChapterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ChapterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/ChapterVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/ChapterDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ChapterService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ChapterService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/mapper/ReadMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/mapper/ReadMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/ReadRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/ReadRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ReadService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ReadService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,8 +25,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -43,7 +39,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master-3" />
+        <entry key="$PROJECT_DIR$" value="master-4" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -68,7 +64,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master-4",
+    "git-widget-placeholder": "master-5",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/Idea_workspace/untitled/src/main/java/org/example/dto",
@@ -188,7 +184,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739793556488</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="新增获取与修改书籍信息、修改章节内容/标题、临时封面存储、创建书籍（封面移入永久目录）、创建章节功能">
+      <option name="closed" value="true" />
+      <created>1739863536647</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1739863536647</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -198,7 +202,8 @@
     <MESSAGE value="新增阅读页面个性化设置" />
     <MESSAGE value="新增阅读页面个性化、整合用户管理设置" />
     <MESSAGE value="新增获取图书信息、修改书籍信息、章节内容违禁词过滤、手动修改章节内容/标题等功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增获取图书信息、修改书籍信息、章节内容违禁词过滤、手动修改章节内容/标题等功能" />
+    <MESSAGE value="新增获取与修改书籍信息、修改章节内容/标题、临时封面存储、创建书籍（封面移入永久目录）、创建章节功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增获取与修改书籍信息、修改章节内容/标题、临时封面存储、创建书籍（封面移入永久目录）、创建章节功能" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

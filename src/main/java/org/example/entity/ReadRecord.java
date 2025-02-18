@@ -15,7 +15,7 @@ public class ReadRecord {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private Users users;
+    private Users user;
 
     @ManyToOne
     @JoinColumn(name = "bookId", nullable = false)
@@ -27,7 +27,7 @@ public class ReadRecord {
 
     public ReadRecord(Users user, Book book) {
         this.book=book;
-        this.users=user;
+        this.user=user;
     }
     public ReadRecord() {
     }

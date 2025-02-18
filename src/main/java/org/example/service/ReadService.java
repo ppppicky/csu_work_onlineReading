@@ -9,12 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ReadService {
-//    public void updateReadRecord(ReadRecord readRecord);
-//
-//    public ReadRecord getLastRecordByUser(Users users);
 
-    void processNewRecord(ReadRecordDTO record);
-    
     List<FontResource> getAvailableFonts();
 
     ReadingSettingDTO getUserSettings(Users user);

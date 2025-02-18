@@ -32,35 +32,6 @@ public class ReadController {
     @Autowired
     BackgroundService backgroundService;
 
-    /**
-     * 保存阅读进度
-     * @param dto
-     * @param session
-     * @return
-     */
-    @ApiOperation(value = "保存用户阅读进度", notes = "保存当前用户的阅读进度信息")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "成功保存"),
-            @ApiResponse(code = 400, message = "请求参数错误"),
-            @ApiResponse(code = 404, message = "用户或书籍未找到"),
-            @ApiResponse(code = 500, message = "服务器内部错误")
-    })
-    @PostMapping("/record/save")
-    public ResponseEntity<?> save(@Valid @RequestBody ReadRecordDTO dto, HttpSession session) {
-        try {
-            readService.processNewRecord(dto);
-            return ResponseEntity.ok().build();
-        } catch (GlobalException.UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (GlobalException.BookNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (GlobalException.InvalidPageException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            log.error(e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
 
 
     /**
