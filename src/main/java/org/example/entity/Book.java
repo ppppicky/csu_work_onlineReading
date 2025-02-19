@@ -40,7 +40,7 @@ public class Book {
     @JoinColumn(name = "bookTypeId", nullable = false)
     private BookType bookType;
 
-    @Lob
-    private byte[] epubFile;
+//    @Lob
+//    private byte[] epubFile;
 
 }

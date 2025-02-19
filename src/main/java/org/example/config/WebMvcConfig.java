@@ -1,6 +1,7 @@
 package org.example.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.json.JacksonObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -67,7 +68,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
         registry.addResourceHandler("/front/**").addResourceLocations("classpath:/front/");
     }
-//
+
 //    @Override
 //    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 //        log.info("---converter---");

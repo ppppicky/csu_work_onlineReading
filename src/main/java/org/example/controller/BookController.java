@@ -3,6 +3,7 @@ package org.example.controller;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.BookInfoDTO;
+import org.example.dto.BookChapterCombinationDTO;
 import org.example.dto.ChapterDTO;
 import org.example.dto.CoverTempDTO;
 import org.example.repository.ForbiddenWordRepo;
@@ -34,35 +35,53 @@ public class BookController {
     @Autowired
     CoverTempService coverTempService;
 
-    /**
-     * 添加书籍
-     * @param file
-     * @param typeName
-     * @param isVip
-     * @param session
-     * @return
-     */
-    @ApiOperation(value = "添加书籍", notes = "上传EPUB文件并添加书籍到系统")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "书籍添加成功",response = String.class),
-            @ApiResponse(code = 500, message = "服务器内部错误")
-    })
-    @PostMapping("/add")
-    public ResponseEntity<String> addBook(
-            @ApiParam(value = "上传的EPUB文件", required = true) @RequestParam("file") MultipartFile file,
-            @ApiParam(value = "书籍类型名称", required = true) @RequestParam("typeName") String typeName,
-            @ApiParam(value = "是否为VIP书籍 (0: 否, 1: 是)", required = true) @RequestParam("isVIP") byte isVip,HttpSession session) {
-        try {
-            // 将上传的文件保存为临时文件
-            File tempFile = File.createTempFile("epub-", ".epub");
-            file.transferTo(tempFile);
-            bookService.addBook(tempFile, typeName, isVip);
-            return ResponseEntity.ok("Book added successfully!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Error:" + e.getMessage());
-        }
+//    /**
+//     * 添加书籍
+//     * @param file
+//     * @param typeName
+//     * @param isVip
+//     * @param session
+//     * @return
+//     */
+//    @ApiOperation(value = "添加书籍", notes = "上传EPUB文件并添加书籍到系统")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "书籍添加成功",response = String.class),
+//            @ApiResponse(code = 500, message = "服务器内部错误")
+//    })
+//    @PostMapping("/add")
+//    public ResponseEntity<String> addBook(
+//            @ApiParam(value = "上传的EPUB文件", required = true) @RequestParam("file") MultipartFile file,
+//            @ApiParam(value = "书籍类型名称", required = true) @RequestParam("typeName") String typeName,
+//            @ApiParam(value = "是否为VIP书籍 (0: 否, 1: 是)", required = true) @RequestParam("isVIP") byte isVip,HttpSession session) {
+//        try {
+//            // 将上传的文件保存为临时文件
+//            File tempFile = File.createTempFile("epub-", ".epub");
+//            file.transferTo(tempFile);
+//            bookService.addBook(tempFile, typeName, isVip);
+//            return ResponseEntity.ok("Book added successfully!");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body("Error:" + e.getMessage());
+//        }
+//    }
+@ApiOperation(value = "解析EPUB书籍", notes = "上传EPUB文件并返回书籍元数据和章节目录")
+@ApiResponses({
+        @ApiResponse(code = 200, message = "解析成功", response = BookChapterCombinationDTO.class),
+        @ApiResponse(code = 400, message = "解析失败")
+})
+@PostMapping("/parse")
+public ResponseEntity<BookChapterCombinationDTO> parseBook(
+        @ApiParam(value = "上传的EPUB文件", required = true)
+        @RequestParam("file") MultipartFile file) {
+    try {
+        File tempFile = File.createTempFile("epub-", ".epub");
+        file.transferTo(tempFile);
+        BookChapterCombinationDTO result = bookService.parseEpub(tempFile);
+        return ResponseEntity.ok(result);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().build();
     }
+}
 
     /**
      * 获取图书目录信息
@@ -78,6 +97,7 @@ public class BookController {
     public List<ChapterDTO> getTOC(@PathVariable Integer bookId) {
         return bookService.getBookTOC(bookId);
     }
+
 
     /**
      * 删除书籍
@@ -115,7 +135,6 @@ public class BookController {
       }catch (Exception e){
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
       }
-
     }
 
     @ApiOperation(value = "更新书籍信息", notes = "根据书籍 ID 更新书籍详细信息")
@@ -141,14 +160,15 @@ public class BookController {
     })
     @PostMapping("/create")
     ResponseEntity<String> createBook(
-            @ApiParam(value = "书籍详细信息", required = true) @RequestBody BookInfoDTO bookInfoDTO,HttpSession session){
+            @ApiParam(value = "书籍详细信息", required = true) @RequestBody BookChapterCombinationDTO combinationDTO,HttpSession session){
         try {
-            bookService.createBook(bookInfoDTO);
+            bookService.createBook(combinationDTO);
             return ResponseEntity.ok("update successfully");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     @ApiOperation(value = "上传封面图片", notes = "上传封面图片并返回临时存储信息")
     @ApiResponses({

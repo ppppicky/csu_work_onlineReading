@@ -20,5 +20,11 @@ public class ChapterDTO {
         this.setChapterId(chapterId);
         this.setChapterName(chapterName);
     }
+
+    public ChapterDTO(int chapterId, String chapterName,String content) {
+        this.setChapterId(chapterId);
+        this.setChapterName(chapterName);
+        this.setContent(content);
+    }
     public ChapterDTO(){}
 }

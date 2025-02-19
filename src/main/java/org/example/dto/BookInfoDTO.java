@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.example.entity.BookType;
 
@@ -22,6 +23,7 @@ public class BookInfoDTO {
 
     private Byte isCharge;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

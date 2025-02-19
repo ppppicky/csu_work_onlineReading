@@ -104,10 +104,10 @@ public class ChapterSImpl implements ChapterService {
     @Override
     public void createChapter(Integer bookId, ChapterDTO chapterDTO) {
         if (chapterRepo.findByBookIdAndChapterNum(bookId, chapterDTO.getChapterId()).isPresent()) {
-            throw new IllegalArgumentException("chapter existed");
+            throw new IllegalArgumentException("chapter already exists");
         }
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("user not existed"));
+                .orElseThrow(() -> new IllegalArgumentException("book not existed"));
         BookChapter bookChapter = new BookChapter();
         bookChapter.setBookId(book.getBookId());
         bookChapter.setChapterName(chapterDTO.getChapterName());

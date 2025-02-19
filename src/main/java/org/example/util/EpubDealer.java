@@ -4,6 +4,7 @@ package org.example.util;
 import lombok.extern.slf4j.Slf4j;
 import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.EpubReader;
+import org.example.dto.ChapterDTO;
 import org.example.entity.BookChapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,24 +33,24 @@ public class EpubDealer {
     @Autowired
     ContentFilter contentFilter;
 
-    /**
-     * 保存封面图片到本地
-     *
-     * @param imageData
-     * @return
-     * @throws IOException
-     */
-    public String saveCoverImage(byte[] imageData) throws IOException {
-        if (imageData == null || imageData.length == 0) {
-            log.info("封面图片数据不能为空");
-            return null;
-        }
-        String baseDir = System.getProperty("user.dir") + "/src/main/resources/static/covers/";
-        // 生成唯一的封面图片名称
-        String fileName = UUID.randomUUID() + ".jpg";
-        Files.write(Paths.get(baseDir, fileName), imageData);
-        return "/covers/" + fileName;//返回相对路径（供前端访问）
-    }
+//    /**
+//     * 保存封面图片到本地
+//     *
+//     * @param imageData
+//     * @return
+//     * @throws IOException
+//     */
+//    public String saveCoverImage(byte[] imageData) throws IOException {
+//        if (imageData == null || imageData.length == 0) {
+//            log.info("封面图片数据不能为空");
+//            return null;
+//        }
+//        String baseDir = System.getProperty("user.dir") + "/src/main/resources/static/covers/";
+//        // 生成唯一的封面图片名称
+//        String fileName = UUID.randomUUID() + ".jpg";
+//        Files.write(Paths.get(baseDir, fileName), imageData);
+//        return "/covers/" + fileName;//返回相对路径（供前端访问）
+//    }
 
     /**
      * 统计章节数
@@ -78,9 +79,9 @@ public class EpubDealer {
      * @return
      * @throws IOException
      */
-    public List<BookChapter> parseChapters(Integer bookId, InputStream epubStream) throws IOException {
+    public List<ChapterDTO> parseChapters(Integer bookId, InputStream epubStream) throws IOException {
         Book epubBook = new EpubReader().readEpub(epubStream);
-        List<BookChapter> chapters = new ArrayList<>();
+        List<ChapterDTO> chapters = new ArrayList<>();
         int chapterNum = 1;
 
         TableOfContents toc = epubBook.getTableOfContents();
@@ -91,19 +92,16 @@ public class EpubDealer {
         return chapters;
     }
 
-    private void processChapterRecursive(Book epubBook, TOCReference ref, Integer bookId, List<BookChapter> chapters, int chapterNum) {
+    private void processChapterRecursive(Book epubBook, TOCReference ref, Integer bookId, List<ChapterDTO> chapters, int chapterNum) {
         // 获取章节对应的 Resource
         Resource res = epubBook.getResources().getByHref(ref.getCompleteHref());
         if (res == null) return;
 
         // 创建 Chapter 对象
-        BookChapter chapter = new BookChapter();
-        chapter.setBookId(bookId);
-        chapter.setChapterNum(chapterNum);
+        ChapterDTO chapter = new ChapterDTO();
+        chapter.setChapterId(chapterNum);
         chapter.setChapterName(extractChapterName(epubBook, res));
         chapter.setContent(extractChapterContent(res));
-        chapter.setCreateTime(LocalDateTime.now());
-        chapter.setUpdateTime(LocalDateTime.now());// 获取章节内容
         // 添加到章节列表
         chapters.add(chapter);
 
