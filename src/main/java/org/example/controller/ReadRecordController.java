@@ -1,9 +1,6 @@
 package org.example.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ReadRecordDTO;
 import org.example.entity.Users;
@@ -21,6 +18,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@Api(value = "阅读记录控制器",tags = "阅读记录管理接口")
 @RequestMapping("/record")
 public class ReadRecordController {
     @Autowired
@@ -82,11 +80,12 @@ public class ReadRecordController {
     })
     @GetMapping("/{bookId}")
     public ResponseEntity<ReadRecordDTO> getRecord(
-            @ApiParam(value = "书籍ID", required = true)@PathVariable Integer bookId, @AuthenticationPrincipal Users users
-            //@RequestParam("userId")Integer userId
+            @ApiParam(value = "书籍ID", required = true)@PathVariable Integer bookId,
+          //  @AuthenticationPrincipal Users users
+            @RequestParam("userId")Integer userId
     ) {
         try {
-            return ResponseEntity.ok().body(readService.getLastRecordByUserId(users.getUserId(), bookId));
+            return ResponseEntity.ok().body(readService.getLastRecordByUserId(userId, bookId));
         } catch (Exception e) {
             log.error("获取书籍阅读进度失败: {}", e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

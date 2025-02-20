@@ -77,6 +77,21 @@ public class UserController {
         return ResponseEntity.ok("logout successfully");
     }
 
+    /**
+     * 获取用户个人信息
+     * @param userName 用户名
+     * @return 用户详细信息
+     */
+    @GetMapping("/info/{userName}")
+    @ApiOperation(value = "获取用户个人信息")
+    public ResponseEntity<?> getUserInfo(@PathVariable String userName) {
+        Users user = userService.getUserByUserName(userName);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return ResponseEntity.ok(user);
+    }
+
 
 }
 

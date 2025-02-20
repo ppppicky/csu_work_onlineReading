@@ -2,7 +2,6 @@ package org.example.service.Impl;
 
 import org.example.dto.ChargeDTO;
 import org.example.dto.SetChargeStatusDTO;
-import org.example.entity.Book;
 import org.example.entity.ChargeManagement;
 import org.example.mapper.ChargeMapper;
 import org.example.repository.BookRepository;
@@ -50,7 +49,6 @@ public class ChargeSImpl implements ChargeService {
 
         if (isCharge == 1) {
             // 若设为收费，但 charge_management 表中无记录，则创建默认收费信息
-            //isPresent取反来实现类似 isEmpty() 的功能
             if (!chargeMapper.getChargeInfoByBookId(bookId).isPresent()) {
                 ChargeDTO chargeDTO = new ChargeDTO();
                 chargeDTO.setBookId(bookId);

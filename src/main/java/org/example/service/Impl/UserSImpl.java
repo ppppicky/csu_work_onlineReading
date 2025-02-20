@@ -1,18 +1,14 @@
 package org.example.service.Impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.Manager;
 import org.example.entity.Users;
 import org.example.mapper.UserMapper;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Pageable;
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -21,6 +17,7 @@ public class UserSImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
     @Autowired
     public UserSImpl(UserRepository ur, UserMapper um) {
         userRepository = ur;
@@ -60,6 +57,12 @@ public class UserSImpl implements UserService {
 
         return user;
     }
+
+    @Override
+    public Users getUserByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
+
 
 
 }

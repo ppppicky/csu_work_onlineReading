@@ -1,9 +1,6 @@
 package org.example.service;
 
 import org.example.entity.Users;
-import org.springframework.data.domain.Page;
-
-import java.math.BigDecimal;
 
 public interface UserService {
 
@@ -13,4 +10,7 @@ public interface UserService {
     void register(Users user);
 
     Users login(String userName, String userPassword);
+
+    Users getUserByUserName(String userName);
+
 }

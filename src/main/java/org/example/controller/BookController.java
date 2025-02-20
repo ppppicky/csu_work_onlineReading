@@ -8,7 +8,6 @@ import org.example.dto.ChapterDTO;
 import org.example.dto.CoverTempDTO;
 import org.example.repository.ForbiddenWordRepo;
 import org.example.service.BookService;
-import org.example.service.CoverTempService;
 import org.example.util.BookCoverTempDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,12 +28,6 @@ import java.util.List;
 public class BookController {
     @Autowired
     private BookService bookService;
-
-    @Autowired
-    ForbiddenWordRepo forbiddenWordRepo;
-
-   // @Autowired
-   // CoverTempService coverTempService;
 
     @Autowired
     BookCoverTempDealer coverTempDealer;
@@ -117,6 +110,7 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     ResponseEntity<String> deleteBook(
             @ApiParam(value = "书籍ID", required = true) @PathVariable Integer bookId, HttpSession session) {
         try {
+
             bookService.deleteBook(bookId);
             return ResponseEntity.ok("delete successfully");
         } catch (Exception e) {

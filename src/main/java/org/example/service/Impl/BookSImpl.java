@@ -7,18 +7,16 @@ import nl.siegmann.epublib.epub.EpubReader;
 import org.example.dto.BookInfoDTO;
 import org.example.dto.BookChapterCombinationDTO;
 import org.example.dto.ChapterDTO;
-import org.example.dto.CoverTempDTO;
 import org.example.entity.*;
 import org.example.mapper.BookMapper;
 import org.example.repository.ChapterRepo;
 import org.example.repository.BookRepository;
 import org.example.repository.BookTypeRepository;
+import org.example.repository.ReadRepository;
 import org.example.service.BookService;
 import org.example.service.ChapterService;
-import org.example.service.CoverTempService;
 import org.example.util.EpubDealer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +29,6 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,9 +43,9 @@ public class BookSImpl implements BookService {
     ChapterRepo chapterRepo;
     @Autowired
     BookMapper bookMapper;
-
-    //@Autowired
-    //CoverTempService coverTempService;
+    @Autowired
+    ReadRepository readRepository;
+    ////
     @Autowired
     ChapterService chapterService;
 
@@ -116,6 +113,7 @@ public class BookSImpl implements BookService {
     public void deleteBook(Integer bookId) {
         Book book = bookRepository.findById(bookId).get();
         try {
+
             chapterRepo.deleteByBookId(bookId);
             bookRepository.delete(book);
         } catch (Exception e) {

@@ -106,9 +106,9 @@ public class EpubDealer {
         chapters.add(chapter);
 
         // 递归处理子章节
-//        for (TOCReference child : ref.getChildren()) {
-//            processChapterRecursive(epubBook,child, bookId, chapters,chapterNum);
-//        }
+        for (TOCReference child : ref.getChildren()) {
+            processChapterRecursive(epubBook,child, bookId, chapters,chapterNum);
+        }
     }
 
     private String extractChapterName(Book epubBook, Resource res) {

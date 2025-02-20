@@ -28,7 +28,7 @@ public class BookTypeController {
      * @param session
      * @return
      */
-    @ApiOperation(value = "添加书籍类型",tags = "添加书籍类型")
+    @ApiOperation(value = "添加书籍类型")
     @ApiResponses({
             @ApiResponse(code = 200, message = "booktype add successfully",response =String.class),
             @ApiResponse(code = 404, message = "booktype existed")

@@ -14,13 +14,13 @@ public class ChargeManagement {
     private Integer cmId;
 
     @ManyToOne
-    @JoinColumn(name = "bookId", nullable = false)
+    @JoinColumn(name = "bookId")
     private Book book;
 
-    private Integer freePage;
+    private Integer freeChapter;
 
     @Column(precision = 20, scale = 2)
     private BigDecimal chargeMoney;
 
-    private Byte isVIPFree;// 1:free
+    private Byte isVipFree;// 1:free
 }
