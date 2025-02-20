@@ -16,5 +16,6 @@ public interface ReadRepository extends JpaRepository<ReadRecord,Integer> {
 
     Optional<ReadRecord> findByUserAndBook(Users users, Book book);
 
+    void deleteByBook(Book book);
     List<ReadRecord> findByUser(Users users);
 }

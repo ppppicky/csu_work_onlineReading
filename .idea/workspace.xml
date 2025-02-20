@@ -4,58 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增获取阅读记录、更新阅读记录功能；更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）；更新所有图片视频文件处理、返回是byte[]">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/config/AliPayConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AliPayController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BoughtBookController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/OrdersController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/StarBookController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/VipPriceController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/AliPay.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/OrderQueryDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Orders.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/VipPrice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/BoughtBookRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/OrdersRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/StarBookRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/VipPriceRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BoughtBookService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BoughtBookSImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/OrderServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/StarBookServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/VipPriceServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/OrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/StarBookService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/VipPriceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookTypeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookTypeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ChargeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ChargeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/SetChargeStatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/SetChargeStatusDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/BoughtBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/BoughtBook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ChargeManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ChargeManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/PaymentRecord.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/StarBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/StarBook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/BookRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/BookRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/ChargeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/ChargeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/PaymentRRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/VipUserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ChargeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ChargeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/CoverTempService.java" beforeDir="false" />
+    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="合并">
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/ReadRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/ReadRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChargeSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChargeSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/CoverTempSImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/UserSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/UserSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -256,7 +207,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740031812097</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="合并">
+      <option name="closed" value="true" />
+      <created>1740039253767</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1740039253767</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -270,7 +229,8 @@
     <MESSAGE value="新增获取阅读记录、更新阅读记录功能" />
     <MESSAGE value="新增获取阅读记录、更新阅读记录功能、更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）" />
     <MESSAGE value="新增获取阅读记录、更新阅读记录功能；更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）；更新所有图片视频文件处理、返回是byte[]" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增获取阅读记录、更新阅读记录功能；更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）；更新所有图片视频文件处理、返回是byte[]" />
+    <MESSAGE value="合并" />
+    <option name="LAST_COMMIT_MESSAGE" value="合并" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

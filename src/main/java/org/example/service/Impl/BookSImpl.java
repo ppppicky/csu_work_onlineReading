@@ -114,6 +114,7 @@ public class BookSImpl implements BookService {
         Book book = bookRepository.findById(bookId).get();
         try {
 
+            readRepository.deleteByBook(book);
             chapterRepo.deleteByBookId(bookId);
             bookRepository.delete(book);
         } catch (Exception e) {
@@ -274,14 +275,14 @@ public class BookSImpl implements BookService {
         newBook.setBookDesc(epubDealer.extractBookDescription(epubBook));
         newBook.setBookPage(epubDealer.countChapters(epubBook));
         newBook.setCreateTime(epubDealer.extractBookCreationDate(epubBook));
-        log.info(newBook.toString());
+      //  log.info(newBook.toString());
         // newBook.setUpdateTime(LocalDateTime.now());
         InputStream is = new FileInputStream(bookFile);
         List<ChapterDTO> chapters =
                 epubDealer.parseChapters(0, is).stream()
                         .map(chap -> new ChapterDTO(chap.getChapterId(), chap.getChapterName(), chap.getContent()))
                         .collect(Collectors.toList());
-        log.info(chapters.toString());
+       // log.info(chapters.toString());
         BookChapterCombinationDTO bookChapterCombinationDTO = new BookChapterCombinationDTO();
         bookChapterCombinationDTO.setBookInfo(newBook);
         bookChapterCombinationDTO.setChapters(chapters);
