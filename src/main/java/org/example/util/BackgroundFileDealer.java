@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.UUID;
+import java.nio.file.Files;
 
 
 @Slf4j
@@ -28,47 +28,55 @@ public class BackgroundFileDealer {
     /**
      * 存储文件到临时目录
      */
-    public String saveTemporary(MultipartFile file) {
-        String filePath = TEMP_DIR + UUID.randomUUID() + "_" + file.getOriginalFilename();
-        File tmp = new File(filePath);
-        try (InputStream is = file.getInputStream();
-             OutputStream os = new FileOutputStream(tmp)) {
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-            return filePath;
-        } catch (IOException e) {
-            throw new RuntimeException("文件存储失败", e);
-        }
+    public byte[] saveTemporary(MultipartFile file) throws IOException {
+//        String filePath = TEMP_DIR + UUID.randomUUID() + "_" + file.getOriginalFilename();
+//        File tmp = new File(filePath);
+//        try (InputStream is = file.getInputStream();
+//             OutputStream os = new FileOutputStream(tmp)) {
+//            byte[] buffer = new byte[8192];
+//            int bytesRead;
+//            while ((bytesRead = is.read(buffer)) != -1) {
+//                os.write(buffer, 0, bytesRead);
+//            }
+//            return filePath;
+//        } catch (IOException e) {
+//            throw new RuntimeException("文件存储失败", e);
+//        }
+
+        return file.getBytes(); // 直接返回文件的 byte[]
+
     }
 
     /**
      * 移动文件到正式目录
      */
-    public String moveToPermanent(String tempPath) {
-
-      try {
-          String permanentPath = tempPath.replace(TEMP_DIR, PERM_DIR);
-          File tempFile = new File(tempPath);
-          File newFile = new File(permanentPath);
-          if (tempFile.renameTo(newFile)) {
-              return permanentPath;
-          }
-      }catch (Exception e){
-          e.printStackTrace();
-          log.info("文件移动失败"+e.getLocalizedMessage());
-      }
-throw new RuntimeException();
+//    public String moveToPermanent(String tempPath) {
+//        try {
+//            String permanentPath = tempPath.replace(TEMP_DIR, PERM_DIR);
+//            File tempFile = new File(tempPath);
+//            File newFile = new File(permanentPath);
+//            if (tempFile.renameTo(newFile)) {
+//                return permanentPath;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.info("文件移动失败" + e.getLocalizedMessage());
+//        }
+//        throw new RuntimeException();
+//    }
+    public String moveToPermanent(byte[] fileData, String fileName) throws IOException {
+        String permanentPath = PERM_DIR + fileName;
+        File permanentFile = new File(permanentPath);
+        Files.write(permanentFile.toPath(), fileData); // 将 byte[] 写入文件
+        return permanentPath;
     }
 
     /**
      * 生成缩略图
      */
-    public String generateThumbnail(String filePath, BackgroundType resourceType) {
-        String thumbnailPath = filePath.replace(TEMP_DIR, TEMP_DIR + "thumbnails/");
-        try {
+    public byte[] generateThumbnail(byte[] fileData, BackgroundType resourceType) throws IOException {
+        //  String thumbnailPath = filePath.replace(TEMP_DIR, TEMP_DIR + "thumbnails/");
+        //  try {
 
 //            if (resourceType.equals(ResourceType.GRADIENT)) {
 //                // 解析 CSS 渐变色值（从文件路径读取渐变定义）
@@ -90,20 +98,41 @@ throw new RuntimeException();
 //                        .toFile(thumbnailPath);
 //            }
 
-                if (!resourceType.equals(BackgroundType.VIDEO)) {
-                Thumbnails.of(filePath)
-                        .size(200, 200)
-                        .toFile(thumbnailPath);
-            } else {
+//                if (!resourceType.equals(BackgroundType.VIDEO)) {
+//                Thumbnails.of(filePath)
+//                        .size(200, 200)
+//                        .toFile(thumbnailPath);
+//            } else {
+//
+//                thumbnailPath = thumbnailPath.replace(".mp4", ".jpg"); // 视频缩略图后缀
+//                extractVideoThumbnail(filePath, thumbnailPath);
+//            }
+//            return thumbnailPath;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("缩略图生成失败", e);
+//        }
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(fileData);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-                thumbnailPath = thumbnailPath.replace(".mp4", ".jpg"); // 视频缩略图后缀
-                extractVideoThumbnail(filePath, thumbnailPath);
-            }
-            return thumbnailPath;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("缩略图生成失败", e);
+        if (!resourceType.equals(BackgroundType.VIDEO)) {
+            // 生成图片缩略图
+            Thumbnails.of(inputStream)
+                    .size(200, 200)
+                    .toOutputStream(outputStream);
+        } else {
+            // 生成视频缩略图
+            File tempVideoFile = File.createTempFile("video", ".mp4");
+            Files.write(tempVideoFile.toPath(), fileData);
+            String thumbnailPath = tempVideoFile.getAbsolutePath().replace(".mp4", ".jpg");
+            extractVideoThumbnail(tempVideoFile.getAbsolutePath(), thumbnailPath);
+
+            // 读取缩略图文件
+            byte[] thumbnailData = Files.readAllBytes(new File(thumbnailPath).toPath());
+            outputStream.write(thumbnailData);
         }
+
+        return outputStream.toByteArray(); // 返回缩略图的 byte[]
     }
 
     public static void extractVideoThumbnail(String filePath, String outputPath) {
@@ -126,6 +155,7 @@ throw new RuntimeException();
             e.printStackTrace();
         }
     }
+
     public BufferedImage generateGradientImage(String gradientCss, int width, int height) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
@@ -147,6 +177,7 @@ throw new RuntimeException();
 
         return image;
     }
+
     String[] extractGradientColors(String gradientCss) {
         // 只提取颜色部分
         String colorPart = gradientCss.replaceAll("linear-gradient\\(.*?,", "").replace(")", "").trim();

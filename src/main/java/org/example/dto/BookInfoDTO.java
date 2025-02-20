@@ -15,7 +15,7 @@ public class BookInfoDTO {
 
     private String author;
 
-    private String bookCover;
+    private byte[] bookCover; // 原为 String
 
     private String bookDesc;
 

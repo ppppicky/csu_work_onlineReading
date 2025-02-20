@@ -12,11 +12,11 @@ public class BackgroundDTO {
 
     private BackgroundType resourceType; // IMAGE/GIF/VIDEO
 
-    private String storagePath;
-
+ //   private String storagePath;
+    private byte[] storagePath;
     private Long fileSize;
 
-    private String thumbnailPath;
+  //  private String thumbnailPath;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

@@ -4,24 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增获取阅读记录、更新阅读记录功能">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/BookChapterCombinationDTO.java" afterDir="false" />
+    <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增获取阅读记录、更新阅读记录功能、更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/WebMvcConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/RedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/RedisConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/BackgroundDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/BackgroundDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/BookInfoDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/BookInfoDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/ChapterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/ChapterDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/BackgroundResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/BackgroundResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadingSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadingSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/VipUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/CoverTempDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/CoverTempDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BackgroundService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BackgroundService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/CoverTempService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/CoverTempService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BackgroundSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BackgroundSImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/CoverTempSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/CoverTempSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/BackgroundFileDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/BackgroundFileDealer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/03975ed4-55d8-49f4-9976-fad1c8b14b8e_8e679f4e6489ff0ea5844c4b151a15c2.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/112298fd-61f6-49dc-a541-548ef645cd66_8e679f4e6489ff0ea5844c4b151a15c2.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/9905c69d-9429-42de-b64a-d1b354ec1171_8e679f4e6489ff0ea5844c4b151a15c2.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/9dd7fd75-b289-433f-8477-034a9a990617_屏幕截图 2025-02-14 232110.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/b0a30c4c-1f9b-42ca-a656-8b543cffe027_4CABD89E7D6ADF3731F2341B2E1F470C.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/112298fd-61f6-49dc-a541-548ef645cd66_8e679f4e6489ff0ea5844c4b151a15c2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/5e79d898-5fe4-46d9-a93b-517a48a69a66_4CABD89E7D6ADF3731F2341B2E1F470C.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/9dd7fd75-b289-433f-8477-034a9a990617_屏幕截图 2025-02-14 232110.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/b0a30c4c-1f9b-42ca-a656-8b543cffe027_4CABD89E7D6ADF3731F2341B2E1F470C.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/b579f114-e2b4-45f8-ac80-68d560bbc88b_gradient.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/c45ee2f6-4282-46af-9236-4d4967989ed2_4CABD89E7D6ADF3731F2341B2E1F470C.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/backgrounds/tmp/thumbnails/edac4a57-cb22-4e89-91be-394f43e21d82_4afe01974be8afa6764e061c0d3cd38e.gif" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +212,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739892297261</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="新增获取阅读记录、更新阅读记录功能、更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）">
+      <option name="closed" value="true" />
+      <created>1739977787776</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1739977787776</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -216,7 +232,8 @@
     <MESSAGE value="新增获取图书信息、修改书籍信息、章节内容违禁词过滤、手动修改章节内容/标题等功能" />
     <MESSAGE value="新增获取与修改书籍信息、修改章节内容/标题、临时封面存储、创建书籍（封面移入永久目录）、创建章节功能" />
     <MESSAGE value="新增获取阅读记录、更新阅读记录功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增获取阅读记录、更新阅读记录功能" />
+    <MESSAGE value="新增获取阅读记录、更新阅读记录功能、更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增获取阅读记录、更新阅读记录功能、更新添加书籍逻辑（解析epub获取书籍信息表单、用户修改设置表单、正式提交）" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

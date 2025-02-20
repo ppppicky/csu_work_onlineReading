@@ -18,6 +18,7 @@ import org.example.service.ChapterService;
 import org.example.service.CoverTempService;
 import org.example.util.EpubDealer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,8 +47,8 @@ public class BookSImpl implements BookService {
     @Autowired
     BookMapper bookMapper;
 
-    @Autowired
-    CoverTempService coverTempService;
+    //@Autowired
+    //CoverTempService coverTempService;
     @Autowired
     ChapterService chapterService;
 
@@ -58,11 +59,6 @@ public class BookSImpl implements BookService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    public BookSImpl(BookRepository bookRepository, BookMapper bookMapper) {
-        this.bookRepository = bookRepository;
-        this.bookMapper = bookMapper;
-    }
 
     @Override
     public Page<Book> getAllBook(int page, int size) {
@@ -162,7 +158,19 @@ public class BookSImpl implements BookService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("book not existed"));
         BookInfoDTO bookInfoDTO = new BookInfoDTO();
-        bookInfoDTO.setBookCover(book.getBookCover());
+
+        String coverPath = STATICDIR + book.getBookCover(); // 假设原路径为相对路径
+        try {
+            File coverFile = new File(coverPath);
+            if (coverFile.exists()) {
+                bookInfoDTO.setBookCover(Files.readAllBytes(coverFile.toPath()));
+            } else {
+                bookInfoDTO.setBookCover(null); // 或设置默认图片
+            }
+        } catch (IOException e) {
+            log.error("封面读取失败: {}", e.getMessage());
+            bookInfoDTO.setBookCover(null);
+        }
         bookInfoDTO.setBookDesc(book.getBookDesc());
         bookInfoDTO.setBookPage(book.getBookPage());
         bookInfoDTO.setAuthor(book.getAuthor());
@@ -179,7 +187,7 @@ public class BookSImpl implements BookService {
                 .orElseThrow(() -> new IllegalArgumentException("book not existed"));
         book.setBookType(bookInfoDTO.getBookType());
         book.setBookPage(bookInfoDTO.getBookPage());
-        book.setBookCover(bookInfoDTO.getBookCover());
+     //    book.setBookCover(bookInfoDTO.getBookCover());//不能修改封面
         book.setBookName(bookInfoDTO.getBookName());
         book.setAuthor(bookInfoDTO.getAuthor());
         book.setBookDesc(bookInfoDTO.getBookDesc());
@@ -192,13 +200,21 @@ public class BookSImpl implements BookService {
     public void createBook(BookChapterCombinationDTO combinationDTO) throws IOException {
         BookInfoDTO bookInfoDTO = combinationDTO.getBookInfo();
         Book book = new Book();
+//        if (bookInfoDTO.getBookCover() != null) {
+//            CoverTempDTO tempDTO = coverTempService.getTempCover(bookInfoDTO.getBookCover());
+//            String finalPath = coverTempService.moveToPermanent(tempDTO.getPreviewUrl());
+//            book.setBookCover(finalPath);
+//        }
         if (bookInfoDTO.getBookCover() != null) {
-            CoverTempDTO tempDTO = coverTempService.getTempCover(bookInfoDTO.getBookCover());
-            String finalPath = coverTempService.moveToPermanent(tempDTO.getPreviewUrl());
-            book.setBookCover(finalPath);
-        }
+            // 生成唯一文件名并保存图片
+            String filename = UUID.randomUUID() + ".jpg";
+            String coverPath = "/covers/" + filename;
+            File coverFile = new File(STATICDIR + coverPath);
+            Files.write(coverFile.toPath(), bookInfoDTO.getBookCover());
+            book.setBookCover(coverPath); // 实体仍保存路径
 
-        coverTempService.deleteTempCover(bookInfoDTO.getBookCover()); // 确认保存后删除 Redis 记录
+           // coverTempService.deleteTempCover(bookInfoDTO.getBookCover()); // 确认保存后删除 Redis 记录
+        }
 
         book.setBookType(bookInfoDTO.getBookType());
         book.setBookPage(bookInfoDTO.getBookPage());
@@ -232,27 +248,29 @@ public class BookSImpl implements BookService {
         String author = metadata.getAuthors().isEmpty() ? "Unknown" : String.valueOf(metadata.getAuthors().get(0));
 //考虑用string还是author类
         String bookCover = null;
+        BookInfoDTO newBook = new BookInfoDTO();
         for (Resource resource : resources.getAll()) {
             if (resource.getHref().contains("cover")) {
                 byte[] bytes = resource.getData();
-                String tempCoverKey = UUID.randomUUID().toString();
-                String previewUrl = "/covers/temp/" + tempCoverKey + "_epub_cover.jpg";
-
-                // 创建临时封面DTO
-                CoverTempDTO tempDTO = new CoverTempDTO();
-                tempDTO.setImageData(bytes);
-                tempDTO.setPreviewUrl(previewUrl);
-
-                // 保存到Redis和临时目录
-                bookCover = previewUrl;
-                coverTempService.saveTempCoverData(tempDTO, tempCoverKey);
-                //  bookCover=  epubDealer.saveCoverImage(bytes);
+                newBook.setBookCover(bytes);
+//                String tempCoverKey = UUID.randomUUID().toString();
+//                String previewUrl = "/covers/temp/" + tempCoverKey + "_epub_cover.jpg";
+//
+//                // 创建临时封面DTO
+//                CoverTempDTO tempDTO = new CoverTempDTO();
+//                tempDTO.setImageData(bytes);
+//                tempDTO.setPreviewUrl(previewUrl);
+//
+//                // 保存到Redis和临时目录
+//                bookCover = previewUrl;
+//                coverTempService.saveTempCoverData(tempDTO, tempCoverKey);
+//                //  bookCover=  epubDealer.saveCoverImage(bytes);
                 break;
             }
         }
         log.info("1111111111");
-        BookInfoDTO newBook = new BookInfoDTO();
-        newBook.setBookCover(bookCover);
+
+       // newBook.setBookCover(bookCover);
         newBook.setAuthor(author);
         newBook.setBookName(bookName);
         newBook.setBookDesc(epubDealer.extractBookDescription(epubBook));

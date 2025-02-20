@@ -9,6 +9,7 @@ import org.example.dto.CoverTempDTO;
 import org.example.repository.ForbiddenWordRepo;
 import org.example.service.BookService;
 import org.example.service.CoverTempService;
+import org.example.util.BookCoverTempDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,9 +33,11 @@ public class BookController {
     @Autowired
     ForbiddenWordRepo forbiddenWordRepo;
 
-    @Autowired
-    CoverTempService coverTempService;
+   // @Autowired
+   // CoverTempService coverTempService;
 
+    @Autowired
+    BookCoverTempDealer coverTempDealer;
 //    /**
 //     * 添加书籍
 //     * @param file
@@ -178,7 +181,8 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     @PostMapping(value = "/uploadCover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CoverTempDTO> uploadCover(
             @ApiParam(value = "封面图片文件", required = true)@RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(coverTempService.saveTempCover(file));
+        //return ResponseEntity.ok(coverTempService.saveTempCover(file));
+        return ResponseEntity.ok(coverTempDealer.saveTempCover(file));
     }
 
     @ApiOperation(value = "预览封面图片", notes = "根据临时存储url预览封面图片")
@@ -188,8 +192,9 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     })
     @GetMapping("/coverPreview")
     public ResponseEntity<CoverTempDTO> previewCover(
-            @ApiParam(value = "临时存储url", required = true) @RequestParam("coverUrl") String tempKey) {
-        CoverTempDTO cover = coverTempService.getTempCover(tempKey);
+            @ApiParam(value = "rediskey", required = true) @RequestParam("tempKey") String tempKey) {
+        CoverTempDTO cover=coverTempDealer.getTempCover(tempKey);
+      //  CoverTempDTO cover = coverTempService.getTempCover(tempKey);
         if (cover.getImageData() == null) {
             return ResponseEntity.notFound().build();
         }
