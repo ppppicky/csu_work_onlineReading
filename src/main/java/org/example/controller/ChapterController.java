@@ -3,9 +3,14 @@ package org.example.controller;
 import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterDTO;
 import org.example.service.ChapterService;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +26,6 @@ public class ChapterController {
     ChapterService chapterService;
 /**
      * @param chapterId
-     * @param pageSize  页大小（默认为1000）
      * @return
      */
     @ApiOperation(value = "获取章节内容", notes = "根据章节 ID 获取章节内容，并支持分页")
@@ -30,11 +34,13 @@ public class ChapterController {
             @ApiResponse(code = 404, message = "章节未找到")
     })
     @GetMapping("/{chapterId}")
-    public String readChapter(@PathVariable Integer chapterId,
-                              @RequestParam(defaultValue = "1000") int pageSize){
-       // return chapterService.getChapterContent(chapterId, pageSize);//分页
+    public String readChapter(@PathVariable Integer chapterId
+        //@RequestParam(defaultValue = "0") int page,
+       // @RequestParam(defaultValue = "1000") int pageSize
+                              ){
+            return chapterService.getChapterContent(chapterId);//分页
 
-        return chapterService.getChapterContent(chapterId);//不分页
+       // return chapterService.getChapterContent(chapterId);//不分页
     }
 
 
@@ -87,6 +93,11 @@ public class ChapterController {
         try {
             chapterService.createChapter(bookId, chapterDTO);
             return ResponseEntity.ok().body("create chapter successfully");
+        }
+            catch (GlobalException.BookNotFoundException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            } catch (GlobalException.InvalidPageException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

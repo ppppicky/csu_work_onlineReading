@@ -37,8 +37,9 @@ public class ReadRecordSImpl implements ReadRecordService {
     public List<ReadRecordDTO> getAllRecordsByUserId(int userId) {
        Users users=  userRepository.findById(userId)
                 .orElseThrow(()->new IllegalArgumentException("user not existed"));
-        List<ReadRecordDTO> recordDTOS= readRepository.findByUser(users).
-                stream().map((item)->{
+       List<ReadRecord>readRecords= readRepository.findByUser(users)
+               .orElseThrow(()->new IllegalArgumentException("book not been read yet"));
+        List<ReadRecordDTO> recordDTOS= readRecords.stream().map((item)->{
         ReadRecordDTO dto=new ReadRecordDTO();
         BeanUtils.copyProperties(item,dto);
 
@@ -82,7 +83,7 @@ public class ReadRecordSImpl implements ReadRecordService {
         if (dto.getLastReadPage() != null && dto.getLastReadPage() > book.getBookPage()) {
             throw new GlobalException.InvalidPageException("page out of index");
         }
-        log.info("ffffffff");
+
         ReadRecord record = readRepository.findByUserAndBook(user, book)
                 .orElse(new ReadRecord(user, book));
         record.setUser(record.getUser());

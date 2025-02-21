@@ -33,8 +33,9 @@ public class ChargeController {
      */
     @GetMapping("/book/{bookId}")
     @ApiOperation(value = "根据书籍 ID 获取收费信息")
-    public ResponseEntity<ChargeManagement> getChargeInfo(@PathVariable int bookId) {
-        Optional<ChargeManagement> chargeInfo = chargeService.getChargeInfoByBookId(bookId);
+    public ResponseEntity<ChargeDTO> getChargeInfo(@PathVariable int bookId) {
+        Optional<ChargeDTO> chargeInfo = chargeService.getChargeInfoByBookId(bookId);
+
         return chargeInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

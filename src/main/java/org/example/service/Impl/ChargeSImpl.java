@@ -7,6 +7,7 @@ import org.example.mapper.ChargeMapper;
 import org.example.repository.BookRepository;
 import org.example.repository.ChargeRepository;
 import org.example.service.ChargeService;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,17 @@ public class ChargeSImpl implements ChargeService {
     }
 
     @Override
-    public Optional<ChargeManagement> getChargeInfoByBookId(int bookId) {
-        return chargeRepository.findByBook_BookId(bookId);
+    public Optional<ChargeDTO> getChargeInfoByBookId(int bookId) {
+        ChargeManagement chargeManagement= chargeRepository.findByBook_BookId(bookId)
+                .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
+        ChargeDTO chargeDTO=new ChargeDTO();
+        chargeDTO.setCmId(chargeManagement.getCmId());
+        chargeDTO.setChargeMoney(chargeManagement.getChargeMoney());
+        chargeDTO.setBookId(bookId);
+        chargeDTO.setFreeChapter(chargeManagement.getFreeChapter());
+        chargeDTO.setIsVipFree(chargeManagement.getIsVipFree());
+
+        return null;
     }
 
     @Override
@@ -47,15 +57,17 @@ public class ChargeSImpl implements ChargeService {
 
         chargeMapper.updateBookChargeStatus(bookId, isCharge);
 
-        if (isCharge == 1) {
+        if (isCharge == 1 || isCharge == 2) {
             // 若设为收费，但 charge_management 表中无记录，则创建默认收费信息
             if (!chargeMapper.getChargeInfoByBookId(bookId).isPresent()) {
                 ChargeDTO chargeDTO = new ChargeDTO();
                 chargeDTO.setBookId(bookId);
                 chargeDTO.setFreeChapter(0);
                 chargeDTO.setChargeMoney(new java.math.BigDecimal("0.00"));
-                chargeDTO.setIsVipFree((byte) 0);
+                chargeDTO.setIsVipFree((byte) isCharge);
                 chargeMapper.insertChargeDetails(chargeDTO);
+            }else {
+                chargeMapper.updateVipChargeStatus(bookId, isCharge);
             }
         } else {
             // 若设为免费，则删除 charge_management 记录

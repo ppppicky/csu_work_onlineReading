@@ -26,7 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+
 
 @Slf4j
 @Service
@@ -46,16 +46,6 @@ public class ReadSImpl implements ReadService {
     @Autowired
     private SettingRepo settingRepo;
 
-
-//    @Override
-//    public void updateReadRecord(ReadRecord readRecord) {
-//        readMapper.updateReadRecord(readRecord.getReadId(), readRecord.getLastReadPage());
-//    }
-//
-//    @Override
-//    public ReadRecord getLastRecordByUser(Users users){
-//        return readMapper.getLastReadRecordByUser(users.getUserId());
-//    }
 
 
     /**

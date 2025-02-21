@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
@@ -15,6 +16,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan("org.example.mapper")
 @ComponentScan("org.example.config")
 @ComponentScan("org.example.util")
+
+@EnableScheduling // 启用定时任务
+
 @EnableTransactionManagement
 @SpringBootApplication
 @EnableCaching

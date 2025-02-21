@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -63,32 +64,39 @@ public class ReadRecordController {
     })
     @GetMapping("/allRecords/{userId}")
     public ResponseEntity<List<ReadRecordDTO>> getUsersAllRecord(
-            @AuthenticationPrincipal Users users) {
+            //  @AuthenticationPrincipal Users users)
+            @PathVariable Integer userId) {
         try {
-            return ResponseEntity.ok().body(readService.getAllRecordsByUserId(users.getUserId()));
+            return ResponseEntity.ok().body(readService.getAllRecordsByUserId(userId));
         } catch (Exception e) {
-            log.error("获取用户阅读记录失败: {}", e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            if (e.getMessage().equals("book not been read yet")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonList(new ReadRecordDTO()));
+            }
+            log.error("获取书籍阅读进度失败: {}", e.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @ApiOperation(value = "获取书籍阅读进度", notes = "根据用户 ID 和书籍 ID 获取该用户的阅读进度")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "成功获取进度", response = ReadRecordDTO.class),
-            @ApiResponse(code = 404, message = "记录未找到"),
-            @ApiResponse(code = 500, message = "服务器内部错误")
+            @ApiResponse(code = 200, message = "成功检索阅读记录", response = ReadRecordDTO.class),
+            @ApiResponse(code = 404, message = "指定的书籍或用户不存在或未读过该项目", response = ReadRecordDTO.class),
+            @ApiResponse(code = 500, message = "服务器错误", response = Void.class)
     })
-    @GetMapping("/{bookId}")
+    @GetMapping("/{bookId}/{userId}")
     public ResponseEntity<ReadRecordDTO> getRecord(
-            @ApiParam(value = "书籍ID", required = true)@PathVariable Integer bookId,
-          //  @AuthenticationPrincipal Users users
-            @RequestParam("userId")Integer userId
+            @ApiParam(value = "书籍ID", required = true) @PathVariable Integer bookId, @PathVariable Integer userId
+            //  @AuthenticationPrincipal Users users
+            //   @RequestParam("userId")Integer userId
     ) {
         try {
             return ResponseEntity.ok().body(readService.getLastRecordByUserId(userId, bookId));
         } catch (Exception e) {
+            if (e.getMessage().equals("book not been read yet")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReadRecordDTO());
+            }
             log.error("获取书籍阅读进度失败: {}", e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

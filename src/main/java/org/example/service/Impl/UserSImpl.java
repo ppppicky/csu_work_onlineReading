@@ -60,9 +60,8 @@ public class UserSImpl implements UserService {
 
     @Override
     public Users getUserByUserName(String userName) {
+
         return userRepository.findByUserName(userName);
     }
-
-
 
 }

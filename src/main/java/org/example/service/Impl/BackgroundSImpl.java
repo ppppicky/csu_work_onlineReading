@@ -90,26 +90,15 @@ public class BackgroundSImpl implements BackgroundService {
         BackgroundDTO tmpBackground = new BackgroundDTO();
         try {
             Image image = backgroundFileDealer.generateGradientImage(gradient, 1600, 900);
-            //  String tempPath = TEMP_DIR + UUID.randomUUID()+"_gradient.png";
-            //       File file = new File(tempPath);
-            //    ImageIO.write((RenderedImage) image, "png", file);
-            //String tempPath = backgroundFileDealer.saveTemporary(file);
-            // String thumbnailPath = backgroundFileDealer.generateThumbnail(tempPath,BackgroundType.GRADIENT);
             tmpBackground.setId(UUID.randomUUID().toString());
             tmpBackground.setResourceType(BackgroundType.GRADIENT);
 
-
-            // 转换为 byte[]
-           // byte[] imageBytes = imageToBytes(image, "jpg");
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 ImageIO.write((RenderedImage) image, "jpg", baos);
-                tmpBackground.setStoragePath( baos.toByteArray());
+                tmpBackground.setStoragePath(baos.toByteArray());
                 tmpBackground.setFileSize(Long.valueOf(baos.toByteArray().length));
             }
 
-           //tmpBackground.setStoragePath(Files.readAllBytes((Path) image)); // 存储文件的 byte[]
-            //  tmpBackground.setStoragePath(tempPath);
-            //   tmpBackground.setThumbnailPath(thumbnailPath);
             tmpBackground.setCreateTime(LocalDateTime.now());
 
             // 存入 Redis，30 分钟后自动删除
@@ -125,7 +114,6 @@ public class BackgroundSImpl implements BackgroundService {
     public void confirmSave(String resourceId, Integer userId) throws IOException {
         objectMapper.registerModule(new JavaTimeModule());
         String jsonData = redisTemplate.opsForValue().get(TEMP_BG_PREFIX + resourceId);
-       // log.info(jsonData);
         if (jsonData == null) {
             throw new IllegalArgumentException("预览信息不存在或已过期");
         }
@@ -140,17 +128,16 @@ public class BackgroundSImpl implements BackgroundService {
         Users users = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
 
-   //     String finalPath = backgroundFileDealer.moveToPermanent(tmp.getStoragePath());
+
         String fileName = UUID.randomUUID() + getFileExtension(tmp.getResourceType());
         String finalPath = backgroundFileDealer.moveToPermanent(tmp.getStoragePath(), fileName);
 
         BackgroundResource resource = new BackgroundResource();
-      //  log.info("dddddd" + finalPath);
         resource.setResourceType(tmp.getResourceType());
         resource.setFileSize(tmp.getFileSize());
         resource.setUser(users);
         resource.setStoragePath(finalPath); // 修改这里
-     //   resource.setThumbnailPath(tmp.getThumbnailPath());
+        //   resource.setThumbnailPath(tmp.getThumbnailPath());
         resource.setCreateTime(LocalDateTime.now());
 
         backgroundRepo.save(resource);
@@ -181,9 +168,9 @@ public class BackgroundSImpl implements BackgroundService {
             BackgroundDTO dto = new BackgroundDTO();
             dto.setId(String.valueOf(resource.getBackgroundId()));
             dto.setResourceType(resource.getResourceType());
-            File file=new File(resource.getStoragePath());
+            File file = new File(resource.getStoragePath());
             try {
-                dto.setStoragePath( Files.readAllBytes(file.toPath()));
+                dto.setStoragePath(Files.readAllBytes(file.toPath()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -204,9 +191,9 @@ public class BackgroundSImpl implements BackgroundService {
         backgroundDTO.setResourceType(backgroundResource.getResourceType());
         backgroundDTO.setFileSize(backgroundResource.getFileSize());
         backgroundDTO.setId(String.valueOf(backgroundResource.getBackgroundId()));
-       File file=new File(backgroundResource.getStoragePath());
+        File file = new File(backgroundResource.getStoragePath());
         backgroundDTO.setStoragePath(Files.readAllBytes(file.toPath()));
-      //  backgroundDTO.setThumbnailPath(backgroundResource.getThumbnailPath());
+        //  backgroundDTO.setThumbnailPath(backgroundResource.getThumbnailPath());
         return backgroundDTO;
     }
 

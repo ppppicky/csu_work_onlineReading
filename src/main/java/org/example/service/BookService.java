@@ -5,6 +5,7 @@ import org.example.dto.BookChapterCombinationDTO;
 import org.example.dto.ChapterDTO;
 import org.example.entity.Book;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +22,10 @@ public interface BookService {
 
     public void deleteBook(Integer bookId);
 
-   // public List<Book> getBooksByType(int bookTypeId);
+    public Page<BookInfoDTO> getBooksByType(Pageable pageable, String bookTypeId);
+
+    Page<BookInfoDTO> getBooksList(String keyword, Pageable pageable);
+
     List<ChapterDTO> getBookTOC(Integer bookId);
 
     BookInfoDTO getBook(Integer bookId);

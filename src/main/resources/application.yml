@@ -45,6 +45,10 @@ alipay:
   notify-url: http://syvn9v.natappfree.cc/alipay/notify
   return-url: http://syvn9v.natappfree.cc/alipay/result
 
+advertisement:
+  daily-limit: 5  # 每日广告观看上限
+
+
 
 #myStaticLocation: "/src/main/resources/static/"
 

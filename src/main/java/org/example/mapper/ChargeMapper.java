@@ -16,6 +16,8 @@ public interface ChargeMapper {
     @Update("UPDATE charge_management SET free_chapter = #{freeChapter}, charge_money = #{chargeMoney}, is_vip_free = #{isVipFree} WHERE book_id = #{bookId}")
     void updateChargeDetails(ChargeDTO chargeDTO);
 
+
+
     // 插入新的收费信息
     @Insert("INSERT INTO charge_management (book_id, free_chapter, charge_money, is_vip_free) " +
             "VALUES (#{bookId}, #{freeChapter}, #{chargeMoney}, #{isVipFree})")
@@ -29,4 +31,7 @@ public interface ChargeMapper {
     // 更新书籍是否收费（Book 表）
     @Update("UPDATE book SET is_charge = #{isCharge} WHERE book_id = #{bookId}")
     void updateBookChargeStatus(@Param("bookId") int bookId, @Param("isCharge") int isCharge);
+
+    @Update("UPDATE charge_management SET is_vip_free = #{isVipFree} WHERE book_id = #{bookId} ")
+    void updateVipChargeStatus(int bookId, int isVipFree);
 }

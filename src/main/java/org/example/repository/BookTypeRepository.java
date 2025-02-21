@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BookTypeRepository extends JpaRepository<BookType,Integer> {
-    BookType findByBookTypeName(String BookTypeName);
+   Optional< BookType> findByBookTypeName(String BookTypeName);
     Page<BookType> findAll(Pageable pageable);
 }

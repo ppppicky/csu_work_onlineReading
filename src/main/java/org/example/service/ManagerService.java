@@ -9,7 +9,7 @@ public interface ManagerService {
     void register(Manager manager);
 
     Manager login(String name, String password);
-    boolean findManager(String name);
+    Manager findManager(String name);
     // 获取用户列表，支持用户名模糊查询
     List<UserDTO> getUsers(String username, int page, int size);
 

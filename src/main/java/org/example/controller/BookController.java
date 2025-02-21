@@ -9,7 +9,11 @@ import org.example.dto.CoverTempDTO;
 import org.example.repository.ForbiddenWordRepo;
 import org.example.service.BookService;
 import org.example.util.BookCoverTempDealer;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -113,6 +117,9 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
 
             bookService.deleteBook(bookId);
             return ResponseEntity.ok("delete successfully");
+
+        } catch (GlobalException.BookNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Deletion failed: " + e.getMessage());
         }
@@ -132,6 +139,34 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
       }catch (Exception e){
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
       }
+    }
+    /**
+     * 查看书籍列表（支持分页 & 模糊查询）
+     * @param page 当前页码
+     * @param size 每页大小
+     * @param keyword 模糊查询关键词（可选）
+     * @return 书籍列表（分页）
+     */
+    @GetMapping("/list")
+    @ApiOperation(value = "查看书籍列表（支持模糊查询）")
+    public ResponseEntity<Page<BookInfoDTO>> getBooksList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BookInfoDTO> books = bookService.getBooksList(keyword, pageable);
+        return ResponseEntity.ok(books);
+    }
+    @GetMapping("/list/{typeName}")
+    ResponseEntity<Page<BookInfoDTO>> getBooksByType(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable("typeName") String typeName) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BookInfoDTO> books = bookService.getBooksByType(pageable, typeName);
+        return ResponseEntity.ok(books);
     }
 
     @ApiOperation(value = "更新书籍信息", notes = "根据书籍 ID 更新书籍详细信息")

@@ -18,21 +18,49 @@ public class RedisConfig extends CachingConfigurerSupport {
 //        redisTemplate.setConnectionFactory(connectionFactory);
 //        return redisTemplate;
 //    }
+@Bean(name = "objectRedisTemplate")
+public   RedisTemplate<String, Object> ObjectRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+    redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(connectionFactory);
+        return redisTemplate;
+    }
+    @Bean
+    public RedisTemplate<String, Integer> integerRedisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Integer> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new RedisSerializer<Integer>() {
+            @Override
+            public byte[] serialize(Integer value) {
+                return value == null ? null : value.toString().getBytes();
+            }
 
+            @Override
+            public Integer deserialize(byte[] bytes) {
+                return bytes == null ? null : Integer.parseInt(new String(bytes));
+            }
+        });
+        return template;
+    }
    // @Bean(name = "byteArrayRedisTemplate")
     @Bean
-    public RedisTemplate<String, byte[]> byteArrayRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+      public RedisTemplate<String, byte[]> byteArrayRedisTemplate(RedisConnectionFactory factory) {
+            RedisTemplate<String, byte[]> template = new RedisTemplate<>();
+            template.setConnectionFactory(factory);
+            template.setKeySerializer(new StringRedisSerializer());
+            template.setValueSerializer(new RedisSerializer<byte[]>() {
+                @Override
+                public byte[] serialize(byte[] value) {
+                    return value;
+                }
 
-        // 设置 Key 和 HashKey 的序列化器
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
-
-        // Value 和 HashValue 直接存储 byte[]，不进行额外序列化
-        template.setValueSerializer(RedisSerializer.byteArray());
-        template.setHashValueSerializer(RedisSerializer.byteArray());
-
-        return template;
+                @Override
+                public byte[] deserialize(byte[] bytes) {
+                    return bytes;
+                }
+            });
+            return template;
     }
 }

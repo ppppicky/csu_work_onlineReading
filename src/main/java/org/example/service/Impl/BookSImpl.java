@@ -9,13 +9,11 @@ import org.example.dto.BookChapterCombinationDTO;
 import org.example.dto.ChapterDTO;
 import org.example.entity.*;
 import org.example.mapper.BookMapper;
-import org.example.repository.ChapterRepo;
-import org.example.repository.BookRepository;
-import org.example.repository.BookTypeRepository;
-import org.example.repository.ReadRepository;
+import org.example.repository.*;
 import org.example.service.BookService;
 import org.example.service.ChapterService;
 import org.example.util.EpubDealer;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +48,10 @@ public class BookSImpl implements BookService {
     ChapterService chapterService;
 
     @Autowired
+    StarBookRepository starBookRepository;
+    @Autowired
+    BoughtBookRepository boughtBookRepository;
+    @Autowired
     EpubDealer epubDealer;
     private final String STATICDIR = System.getProperty("user.dir") + "/src/main/resources/static";
 
@@ -62,6 +64,55 @@ public class BookSImpl implements BookService {
         Pageable pageable = PageRequest.of(page, size);
         return bookRepository.findAll(pageable);
     }
+    @Override
+    public Page<BookInfoDTO> getBooksByType(Pageable pageable, String typeName) {
+
+      BookType bookType=bookTypeRepository.findByBookTypeName(typeName)
+              .orElseThrow(()->new GlobalException.BookTypeNotFoundException("bookType not found"));
+        Page<Book> books=  bookRepository.findByBookType(bookType,pageable);
+
+        return books.map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<BookInfoDTO> getBooksList(String keyword, Pageable pageable) {
+        Page<Book> books;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            books = bookRepository.findAll(pageable);
+        } else {
+            books = bookRepository.findByBookNameContainingOrAuthorContaining(keyword, keyword, pageable);
+        }
+
+        // **转换 `Book` 为 `BookInfoDTO`**
+        return books.map(this::convertToDTO);
+    }
+
+    private BookInfoDTO convertToDTO(Book book) {
+        BookInfoDTO dto = new BookInfoDTO();
+        dto.setBookId(book.getBookId());
+        dto.setBookName(book.getBookName());
+        dto.setAuthor(book.getAuthor());
+        String coverPath = STATICDIR + book.getBookCover(); // 假设原路径为相对路径
+        try {
+            File coverFile = new File(coverPath);
+            if (coverFile.exists()) {
+              dto.setBookCover(Files.readAllBytes(coverFile.toPath()));
+            } else {
+               dto.setBookCover(null); // 或设置默认图片
+            }
+        } catch (IOException e) {
+            log.error("封面读取失败: {}", e.getMessage());
+            dto.setBookCover(null);
+        }
+        dto.setBookType(book.getBookType());
+        dto.setBookDesc(book.getBookDesc());
+        dto.setBookPage(book.getBookPage());
+        dto.setIsCharge(book.getIsCharge());
+        dto.setCreateTime(book.getCreateTime());
+        dto.setUpdateTime(book.getUpdateTime());
+        return dto;
+    }
+
 
 //    @Transactional
 //    public Book addBook(File bookFile, String typeName, Byte isVip) throws IOException {
@@ -111,9 +162,12 @@ public class BookSImpl implements BookService {
     @Override
     @Transactional
     public void deleteBook(Integer bookId) {
-        Book book = bookRepository.findById(bookId).get();
+        Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));;
         try {
 
+            boughtBookRepository.deleteByBookId(bookId);
+            starBookRepository.deleteByBookId(bookId);
             readRepository.deleteByBook(book);
             chapterRepo.deleteByBookId(bookId);
             bookRepository.delete(book);
@@ -155,7 +209,7 @@ public class BookSImpl implements BookService {
     @Override
     public BookInfoDTO getBook(Integer bookId) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("book not existed"));
+                .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
         BookInfoDTO bookInfoDTO = new BookInfoDTO();
 
         String coverPath = STATICDIR + book.getBookCover(); // 假设原路径为相对路径
@@ -183,7 +237,7 @@ public class BookSImpl implements BookService {
     @Override
     public void updateBook(BookInfoDTO bookInfoDTO) {
         Book book = bookRepository.findById(bookInfoDTO.getBookId())
-                .orElseThrow(() -> new IllegalArgumentException("book not existed"));
+                .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
         book.setBookType(bookInfoDTO.getBookType());
         book.setBookPage(bookInfoDTO.getBookPage());
      //    book.setBookCover(bookInfoDTO.getBookCover());//不能修改封面

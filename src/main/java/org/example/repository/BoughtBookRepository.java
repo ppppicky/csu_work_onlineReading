@@ -14,4 +14,8 @@ public interface BoughtBookRepository extends JpaRepository<BoughtBook, Integer>
 
     // 判断用户是否已购买指定书籍
     Optional<BoughtBook> findByUserIdAndBookId(Integer userId, Integer bookId);
+    Long countByBookId(Integer bookId);
+    List<BoughtBook> findByBookId(Integer bookId);
+
+    void deleteByBookId(Integer bookId);
 }

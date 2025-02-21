@@ -19,4 +19,16 @@ public class GlobalException {
             super(message);
         }
     }
+    public static class BookTypeNotFoundException extends RuntimeException {
+
+        public BookTypeNotFoundException(String message) {
+            super(message);
+        }
+    }
+    public static class ChapterNotFoundException extends RuntimeException {
+
+        public ChapterNotFoundException(String message) {
+            super(message);
+        }
+    }
 }

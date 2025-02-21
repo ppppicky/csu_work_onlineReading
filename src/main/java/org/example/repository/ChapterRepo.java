@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface ChapterRepo extends JpaRepository<BookChapter,Integer> {
     List<BookChapter> findByBookId(Integer bookId);
     Optional<BookChapter> findByBookIdAndChapterNum(Integer bookId, Integer chapterNum);
+    boolean existsByBookIdAndChapterId(int bookId, int chapterId);
 
     void deleteByBookId(Integer bookId);
 }

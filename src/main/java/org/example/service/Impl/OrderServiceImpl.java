@@ -1,5 +1,8 @@
 package org.example.service.Impl;
 
+import com.alipay.api.AlipayApiException;
+import lombok.extern.slf4j.Slf4j;
+import org.example.config.AliPayConfig;
 import org.example.dto.OrderQueryDTO;
 import org.example.entity.BoughtBook;
 import org.example.entity.Orders;
@@ -8,23 +11,33 @@ import org.example.repository.BoughtBookRepository;
 import org.example.repository.OrdersRepository;
 import org.example.repository.UserRepository;
 import org.example.service.OrderService;
+import org.example.util.AliPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrdersRepository ordersRepository;
     private final UserRepository userRepository;
     private final BoughtBookRepository boughtBookRepository;
+
+    @Resource
+    private AliPayUtil aliPayUtil; // 负责调用支付宝关闭订单的工具类
+
+    @Resource
+    private AliPayConfig aliPayConfig; // 读取支付宝配置
 
     @Autowired
     public OrderServiceImpl(OrdersRepository ordersRepository, UserRepository userRepository, BoughtBookRepository boughtBookRepository) {
@@ -132,6 +145,7 @@ public class OrderServiceImpl implements OrderService {
             BoughtBook boughtBook = new BoughtBook();
             boughtBook.setUserId(user.getUserId());
             boughtBook.setBookId(order.getBookId());
+            boughtBook.setBoughtTime(LocalDateTime.now());
             boughtBookRepository.save(boughtBook);
         }
 
@@ -174,5 +188,37 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("订单状态不允许取消");
+    }
+
+
+
+    /**
+     * 定时关闭超时订单（每 10 分钟执行一次）
+     */
+    @Scheduled(fixedRate = 600000) // 10 分钟执行一次
+    public void autoCancelOrders() {
+        log.info("========= 开始检查超时未支付订单 =========");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiryTime = now.minusMinutes(30); // 设定 30 分钟订单超时
+
+        // 查询所有超时未支付的订单
+        List<Orders> expiredOrders = ordersRepository.findByStateAndCreateTimeBefore("PENDING", expiryTime);
+
+        for (Orders order : expiredOrders) {
+            try {
+                // 调用支付宝 API 关闭订单
+                boolean isClosed = aliPayUtil.closeOrder(order.getOrderId(), aliPayConfig);
+
+                // 更新数据库订单状态
+                order.setState("CANCELLED");
+                ordersRepository.save(order);
+                log.info("订单 {} 已自动关闭", order.getOrderId());
+
+            } catch (AlipayApiException e) {
+                log.error("关闭支付宝订单失败: {}", order.getOrderId(), e);
+            }
+        }
+
+        log.info("========= 超时未支付订单检查完成 =========");
     }
 }

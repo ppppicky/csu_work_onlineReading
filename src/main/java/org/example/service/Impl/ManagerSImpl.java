@@ -1,6 +1,5 @@
 package org.example.service.Impl;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.example.dto.UserDTO;
 import org.example.entity.Manager;
 import org.example.entity.Users;
@@ -43,9 +42,8 @@ public class ManagerSImpl implements ManagerService {
     }
 
     @Override
-    public boolean findManager(String name) {
-        return managerRepository.findByManagerName(name)
-                == null ? false : true;
+    public Manager findManager(String name) {
+        return managerRepository.findByManagerName(name);
     }
 
     // 获取用户列表，支持用户名模糊查询

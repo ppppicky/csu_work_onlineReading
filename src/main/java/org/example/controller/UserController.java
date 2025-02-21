@@ -73,7 +73,8 @@ public class UserController {
     @PostMapping("/logout")
     @ApiOperation(value = "用户登出")
     public ResponseEntity<String> logout(HttpSession session) {
-        session.removeAttribute("user");
+  //      session.removeAttribute("user");
+        session.invalidate(); // 让Session失效，删除所有存储的用户信息
         return ResponseEntity.ok("logout successfully");
     }
 
@@ -91,7 +92,5 @@ public class UserController {
         }
         return ResponseEntity.ok(user);
     }
-
-
 }
 

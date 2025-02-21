@@ -10,6 +10,7 @@ import org.example.repository.BookRepository;
 import org.example.repository.ChapterRepo;
 import org.example.service.ChapterService;
 import org.example.util.ContentFilter;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +108,7 @@ public class ChapterSImpl implements ChapterService {
             throw new IllegalArgumentException("chapter already exists");
         }
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("book not existed"));
+                .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
         BookChapter bookChapter = new BookChapter();
         bookChapter.setBookId(book.getBookId());
         bookChapter.setChapterName(chapterDTO.getChapterName());

@@ -8,6 +8,7 @@ import org.example.service.StarBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +77,7 @@ public class StarBookServiceImpl implements StarBookService {
             StarBook starBook = new StarBook();
             starBook.setUserId(userId);
             starBook.setBookId(bookId);
+            starBook.setStarTime(LocalDateTime.now());
             starBookRepository.save(starBook);
             return "Starred";
         }

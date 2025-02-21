@@ -15,6 +15,9 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     // 根据订单号查找订单
     Optional<Orders> findByOrderId(String orderId);
 
+    // 查询所有 "PENDING" 状态且超时的订单
+    List<Orders> findByStateAndCreateTimeBefore(String state, LocalDateTime createTime);
+
     // 自定义查询，支持用户ID必选，其他参数可选
     @Query("SELECT o FROM Orders o WHERE o.userId = :userId " +
             "AND (:name IS NULL OR o.name = :name) " +

@@ -30,7 +30,7 @@ public class ManagerController {
      */
     @PostMapping("/register")
         public ResponseEntity<String>register(@RequestBody Manager manager, HttpSession session){
-       if( managerService.findManager(manager.getManagerName())){
+       if( managerService.findManager(manager.getManagerName())!=null){
            log.info("用户已存在");
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("用户已存在");
        }
@@ -47,7 +47,7 @@ public class ManagerController {
      */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Manager manager, HttpSession session) {
-        if (!managerService.findManager(manager.getManagerName())) {
+        if (managerService.findManager(manager.getManagerName())==null) {
             log.info("管理员不存在");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("用户不存在");
         }
