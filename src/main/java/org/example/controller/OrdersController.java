@@ -31,6 +31,7 @@ public class OrdersController {
     @ApiOperation(value = "统一订单查询接口")
     @PostMapping("/query")
     public ResponseEntity<List<Orders>> queryOrders(@RequestBody OrderQueryDTO dto) {
+        log.info("统一订单查询接口: {}", dto);
         if (dto.getUserId() == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -44,6 +45,7 @@ public class OrdersController {
     @PostMapping("/createOrder")
     @ApiOperation(value = "创建订单")
     public ResponseEntity<String> createOrder(@RequestBody Orders orderRequest) {
+        log.info("创建订单: {}", orderRequest);
         return orderService.createOrder(orderRequest);
     }
 
@@ -53,6 +55,7 @@ public class OrdersController {
     @PostMapping("/payWithBalance")
     @ApiOperation(value = "使用余额支付订单")
     public ResponseEntity<String> payWithBalance(@RequestParam String orderId) {
+        log.info("使用余额支付订单: {}", orderId);
         return orderService.payWithBalance(orderId);
     }
 
@@ -64,6 +67,7 @@ public class OrdersController {
     @PostMapping("/cancelOrder")
     @ApiOperation(value = "取消订单")
     public ResponseEntity<String> cancelOrder(@RequestParam String orderId) {
+        log.info("取消订单: {}", orderId);
         return orderService.cancelOrder(orderId);
     }
 }

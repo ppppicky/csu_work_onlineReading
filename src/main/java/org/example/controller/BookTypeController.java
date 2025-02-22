@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.example.service.BookTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @RestController
 @Api(tags = "图书类型管理接口")
 @RequestMapping("/type")
@@ -35,6 +37,7 @@ public class BookTypeController {
     })
     @PostMapping("/add")
     ResponseEntity<String> addBookType(@RequestBody String typeName , HttpSession session){
+        log.info("添加书籍类型");
         try {
             bookTypeService.addType(typeName);
             return ResponseEntity.ok("booktype add successfully");

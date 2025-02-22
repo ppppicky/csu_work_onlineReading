@@ -20,10 +20,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -73,14 +72,34 @@ public class OrderServiceImpl implements OrderService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("购书订单必须包含 book_id");
         }
 
-        // 确保订单号唯一
-        if (ordersRepository.findByOrderId(orderRequest.getOrderId()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("订单号已存在，请更换 order_id");
-        }
+        /**
+         * 生成唯一订单号
+         * 格式: yyyyMMdd + 时间戳后5位 + 随机3位
+         * 例子: 202402191661165525060
+         *
+         * @return 订单号字符串
+         */
+        // 1. 获取当前日期 yyyyMMdd
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String datePrefix = dateFormat.format(new Date());
+
+        // 2. 获取当前时间戳（毫秒级）并取后5位
+        String timestampSuffix = String.valueOf(System.currentTimeMillis()).substring(8, 13);
+
+//        // 3. 生成 3 位随机数
+//        Random random = new Random();
+//        int randomSuffix = 100 + random.nextInt(900); // 生成100-999之间的随机数
+
+        //使用uuid生成后八位
+        String uuid = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+
+        // 4. 拼接订单号
+        String orderId = datePrefix + timestampSuffix + uuid;
 
         // 创建订单
         orderRequest.setCreateTime(LocalDateTime.now());
         orderRequest.setState("PENDING");
+        orderRequest.setOrderId(orderId);
         ordersRepository.save(orderRequest);
         return ResponseEntity.ok("订单创建成功，订单号：" + orderRequest.getOrderId());
     }

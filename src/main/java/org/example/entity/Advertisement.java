@@ -20,4 +20,6 @@ public class Advertisement {
 
     private Byte isActive = 1; // 是否启用（1=启用, 0=禁用）
 
+    private String url;
+
 }

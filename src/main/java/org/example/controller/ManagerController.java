@@ -29,6 +29,7 @@ public class ManagerController {
      * @return
      */
     @PostMapping("/register")
+    @ApiOperation(value = "管理员注册")
         public ResponseEntity<String>register(@RequestBody Manager manager, HttpSession session){
        if( managerService.findManager(manager.getManagerName())!=null){
            log.info("用户已存在");
@@ -46,6 +47,7 @@ public class ManagerController {
      * @return
      */
     @PostMapping("/login")
+    @ApiOperation(value = "管理员登录")
     public ResponseEntity<String> login(@RequestBody Manager manager, HttpSession session) {
         if (managerService.findManager(manager.getManagerName())==null) {
             log.info("管理员不存在");
@@ -66,6 +68,7 @@ public class ManagerController {
      * @return
      */
     @PostMapping("/logout")
+    @ApiOperation(value = "管理员退出登录")
     public ResponseEntity<String> logout(HttpSession session) {
         session.removeAttribute("manager");
         return ResponseEntity.ok("退出成功");
@@ -84,6 +87,7 @@ public class ManagerController {
             @RequestParam(required = false) String username,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        log.info("获取用户列表");
 
         List<UserDTO> users = managerService.getUsers(username, page, size);
         return ResponseEntity.ok(users);
@@ -100,6 +104,7 @@ public class ManagerController {
     public ResponseEntity<String> updateUserStatus(
             @RequestParam String username,
             @RequestParam Integer status) {
+        log.info("启用/禁用用户账号");
 
         if (status != 1 && status != 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid status value");

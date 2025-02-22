@@ -46,6 +46,7 @@ public class AdvertisementController {
     @ApiOperation("上传广告视频")
     public ResponseEntity<String> uploadAd(@RequestParam("file") MultipartFile file,
                                            @RequestParam String adType) throws IOException {
+        log.info("上传广告视频");
         Advertisement advertisement = new Advertisement();
         advertisement.setAdType(adType);
 //        advertisement.setAdDuration(adDuration);
@@ -63,6 +64,7 @@ public class AdvertisementController {
     @GetMapping("/list")
     @ApiOperation("获取所有广告信息")
     public ResponseEntity<List<Advertisement>> getAllAds() {
+        log.info("获取所有广告信息");
         List<Advertisement> ads = advertisementService.getAllAds();
         return ResponseEntity.ok(ads);
     }
@@ -73,6 +75,7 @@ public class AdvertisementController {
     @GetMapping("/playAd")
     @ApiOperation("用户观看广告并解锁章节")
     public ResponseEntity<?> playAd(@RequestParam int userId) throws IOException {
+        log.info("用户观看广告并解锁章节");
         // 1. 读取每日广告观看上限
         int dailyLimit = advertisementConfig.getDailyLimit();
 
@@ -117,6 +120,7 @@ public class AdvertisementController {
                                      @RequestParam int bookId,
                                      @RequestParam int chapterId,
                                      @RequestParam int adId) { // adId 由前端传递，确保用户观看正确的广告
+        log.info("用户观看广告记录");
         // 1. 读取每日广告观看上限
         int dailyLimit = advertisementConfig.getDailyLimit();
 

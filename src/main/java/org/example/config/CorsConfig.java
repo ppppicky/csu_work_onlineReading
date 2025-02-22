@@ -15,7 +15,7 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // 允许携带 Cookie
-        config.setAllowedOrigins(Arrays.asList("http://localhost:7000")); // 允许前端域名（修改为你的 Vue 端口）
+        config.setAllowedOrigins(Arrays.asList("http://localhost:8888")); // 允许前端域名（修改为你的 Vue 端口）
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Arrays.asList("*"));

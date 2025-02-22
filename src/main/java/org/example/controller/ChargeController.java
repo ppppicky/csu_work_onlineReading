@@ -34,6 +34,7 @@ public class ChargeController {
     @GetMapping("/book/{bookId}")
     @ApiOperation(value = "根据书籍 ID 获取收费信息")
     public ResponseEntity<ChargeDTO> getChargeInfo(@PathVariable int bookId) {
+        log.info("根据书籍 ID 获取收费信息: {}", bookId);
         Optional<ChargeDTO> chargeInfo = chargeService.getChargeInfoByBookId(bookId);
 
         return chargeInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
@@ -45,6 +46,7 @@ public class ChargeController {
     @PutMapping("/update")
     @ApiOperation(value = "更新书籍收费信息")
     public ResponseEntity<String> updateChargeDetails(@RequestBody ChargeDTO chargeDTO) {
+        log.info("更新书籍收费信息: {}", chargeDTO);
         chargeService.updateChargeDetails(chargeDTO);
         return ResponseEntity.ok("updateChargeDetails successfully");
     }
@@ -55,6 +57,7 @@ public class ChargeController {
     @PutMapping("/setChargeStatus")
     @ApiOperation(value = "设置书籍收费状态")
     public ResponseEntity<String> setBookChargeStatus(@RequestBody SetChargeStatusDTO setChargeStatusDTO) {
+        log.info("设置书籍收费状态: {}", setChargeStatusDTO);
         chargeService.setBookChargeStatus(setChargeStatusDTO);
         return ResponseEntity.ok("setBookChargeStatus successfully");
     }
