@@ -1,7 +1,10 @@
 package org.example.service.Impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.*;
+import org.example.dto.BookReadingStatsDTO;
+import org.example.dto.ChargeStatsDTO;
+import org.example.dto.PurchaseStatsDTO;
+import org.example.dto.UserBehaviorStatsDTO;
 import org.example.entity.Book;
 import org.example.entity.BoughtBook;
 import org.example.entity.ChargeManagement;
@@ -32,8 +35,6 @@ public class DashboardSImpl implements DashboardService {
     BookRepository bookRepository;
     @Autowired
     private ChargeRepository chargeManagementRepository;
-    @Autowired
-    private  ReadRepository readRecordRepository;
 
     @Autowired
     private  UserRepository usersRepository;

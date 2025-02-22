@@ -3,12 +3,10 @@ package org.example.controller;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.BackgroundDTO;
-import org.example.dto.ReadRecordDTO;
 import org.example.dto.ReadingSettingDTO;
 import org.example.entity.FontResource;
 import org.example.entity.Users;
 import org.example.service.BackgroundService;
-import org.example.util.GlobalException;
 import org.example.service.ReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 

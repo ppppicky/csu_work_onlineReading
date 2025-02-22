@@ -3,7 +3,6 @@ package org.example.service.Impl;
 import org.example.dto.UserDTO;
 import org.example.entity.Manager;
 import org.example.entity.Users;
-import org.example.mapper.ManagerMapper;
 import org.example.repository.ManagerRepository;
 import org.example.repository.UserRepository;
 import org.example.service.ManagerService;
@@ -20,8 +19,6 @@ public class ManagerSImpl implements ManagerService {
 
     @Autowired
      ManagerRepository managerRepository;
-    @Autowired
-    ManagerMapper managerMapper;
     @Autowired
     UserRepository userRepository;
 

@@ -1,25 +1,20 @@
 package org.example.service.Impl;
 
-import com.google.common.primitives.Bytes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fontbox.ttf.NameRecord;
-import org.apache.fontbox.ttf.*;
+import org.apache.fontbox.ttf.NamingTable;
+import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
-import org.example.dto.ReadRecordDTO;
 import org.example.dto.ReadingSettingDTO;
 import org.example.entity.*;
 import org.example.mapper.ReadMapper;
 import org.example.repository.*;
 import org.example.service.ReadService;
-import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,12 +26,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class ReadSImpl implements ReadService {
-    @Autowired
-    private ReadMapper readMapper;
-    @Autowired
-    private ReadRepository readRepository;
-    @Autowired
-    private BookRepository bookRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired

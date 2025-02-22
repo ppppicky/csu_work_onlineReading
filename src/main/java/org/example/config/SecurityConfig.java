@@ -53,8 +53,8 @@
 //                .anyRequest().authenticated() // 其他请求需要登录
 //                .and()
 //                .formLogin() // 使用默认的表单登录
-//                .loginPage("/login") // 指定登录页面（可选）
-//                .defaultSuccessUrl("/user/info", true) // 登录成功后的跳转页面
+//                .loginPage("/user/login") // 指定登录页面（可选）
+//                .defaultSuccessUrl("/user/home", true) // 登录成功后的跳转页面
 //                .and()
 //                .logout()
 //                .logoutUrl("/logout")

@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ChargeDTO;
 import org.example.dto.SetChargeStatusDTO;
-import org.example.entity.ChargeManagement;
 import org.example.service.ChargeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

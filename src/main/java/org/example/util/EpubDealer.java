@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.EpubReader;
 import org.example.dto.ChapterDTO;
-import org.example.entity.BookChapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,18 +12,14 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Slf4j
@@ -32,25 +27,6 @@ import java.util.UUID;
 public class EpubDealer {
     @Autowired
     ContentFilter contentFilter;
-
-//    /**
-//     * 保存封面图片到本地
-//     *
-//     * @param imageData
-//     * @return
-//     * @throws IOException
-//     */
-//    public String saveCoverImage(byte[] imageData) throws IOException {
-//        if (imageData == null || imageData.length == 0) {
-//            log.info("封面图片数据不能为空");
-//            return null;
-//        }
-//        String baseDir = System.getProperty("user.dir") + "/src/main/resources/static/covers/";
-//        // 生成唯一的封面图片名称
-//        String fileName = UUID.randomUUID() + ".jpg";
-//        Files.write(Paths.get(baseDir, fileName), imageData);
-//        return "/covers/" + fileName;//返回相对路径（供前端访问）
-//    }
 
     /**
      * 统计章节数
@@ -149,11 +125,11 @@ public class EpubDealer {
             if (ref.getCompleteHref().contains(href)) {
                 return Optional.of(ref.getTitle().trim());
             }
-            // 递归检查子章节
-            Optional<String> childTitle = findChapterInTOC(ref.getChildren(), href);
-            if (childTitle.isPresent()) {
-                return childTitle;
-            }
+//            // 递归检查子章节
+//            Optional<String> childTitle = findChapterInTOC(ref.getChildren(), href);
+//            if (childTitle.isPresent()) {
+//                return childTitle;
+//            }
         }
         return Optional.empty();
     }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.CommonLocation;
 import org.example.dto.BackgroundDTO;
 import org.example.entity.BackgroundResource;
 import org.example.entity.BackgroundType;
@@ -21,20 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static com.google.common.io.Files.getFileExtension;
 
 @Slf4j
 @Service
@@ -52,8 +47,6 @@ public class BackgroundSImpl implements BackgroundService {
     private BackgroundFileDealer backgroundFileDealer = new BackgroundFileDealer();
     private static final String TEMP_BG_PREFIX = "temp_bg:";
     private static final long TEMP_EXPIRE_TIME = 6000; // 30 分钟过期
-    private final String TEMP_DIR = System.getProperty("user.dir") + "/src/main/resources/static/backgrounds/tmp/";
-    private final String PERM_DIR = System.getProperty("user.dir") + "/src/main/resources/static/backgrounds/";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 

@@ -13,18 +13,16 @@ import java.time.LocalDateTime;
 public class ReadingSettingDTO {
 
     private String fontFamily;
-
     private Integer fontSize ;
-
     private BackgroundType backgroundType ;
     private String solidColor;
     private Integer backgroundId;
     private Double lineSpacing = 1.5;
 
-    @Pattern(regexp = "day|night|auto|eye-friendly", message = "主题模式不合法")
-    private String themeMode = "day";//白天黑夜护眼等
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
+
+    @Pattern(regexp = "day|night|auto|eye-friendly", message = "主题模式不合法")
+    private String themeMode = "day";//白天黑夜护眼等
 }
 

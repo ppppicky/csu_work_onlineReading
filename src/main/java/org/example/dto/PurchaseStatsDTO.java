@@ -1,6 +1,5 @@
 package org.example.dto;
 
-// PurchaseStatsDTO.java
 
 
 import lombok.Data;

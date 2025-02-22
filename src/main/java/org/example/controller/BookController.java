@@ -3,11 +3,10 @@ package org.example.controller;
 import cn.hutool.core.io.resource.InputStreamResource;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.BookInfoDTO;
 import org.example.dto.BookChapterCombinationDTO;
+import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterDTO;
 import org.example.dto.CoverTempDTO;
-import org.example.repository.ForbiddenWordRepo;
 import org.example.service.BookService;
 import org.example.util.BookCoverTempDealer;
 import org.example.util.GlobalException;
@@ -213,7 +212,6 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     @PostMapping(value = "/uploadCover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CoverTempDTO> uploadCover(
             @ApiParam(value = "封面图片文件", required = true)@RequestParam("file") MultipartFile file) throws IOException {
-        //return ResponseEntity.ok(coverTempService.saveTempCover(file));
         return ResponseEntity.ok(coverTempDealer.saveTempCover(file));
     }
 
@@ -226,7 +224,6 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     public  ResponseEntity<InputStreamResource>previewCover(
             @ApiParam(value = "rediskey", required = true) @RequestParam("tempKey") String tempKey) {
         CoverTempDTO cover=coverTempDealer.getTempCover(tempKey);
-      //  CoverTempDTO cover = coverTempService.getTempCover(tempKey);
         if (cover.getImageData() == null) {
             return ResponseEntity.notFound().build();
         }

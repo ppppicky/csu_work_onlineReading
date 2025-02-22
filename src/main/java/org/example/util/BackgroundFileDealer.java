@@ -20,9 +20,6 @@ import java.nio.file.Files;
 @Slf4j
 
 public class BackgroundFileDealer {
-    @Value("${myStaticLocation}")
-    private String staticLoca;
-    private final String TEMP_DIR = System.getProperty("user.dir") + "/src/main/resources/static/backgrounds/tmp/";
     private final String PERM_DIR = System.getProperty("user.dir") + "/src/main/resources/static/backgrounds/";
 
     /**

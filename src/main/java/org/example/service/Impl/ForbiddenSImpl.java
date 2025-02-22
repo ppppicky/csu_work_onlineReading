@@ -19,32 +19,29 @@ public class ForbiddenSImpl implements ForbiddenService {
     ContentFilter contentFilter;
 
     public ForbiddenWord addWord(String word) {
-           ForbiddenWord forbiddenWord = new ForbiddenWord();
+        ForbiddenWord forbiddenWord = new ForbiddenWord();
 
-           forbiddenWord.setWord(word);
-           ForbiddenWord saved = forbiddenWordRepo.save(forbiddenWord);
-           contentFilter.reloadForbiddenWords(); // 立即刷新
-           return saved;
+        forbiddenWord.setWord(word);
+        ForbiddenWord saved = forbiddenWordRepo.save(forbiddenWord);
+        contentFilter.reloadForbiddenWords(); // 立即刷新
+        return saved;
 
     }
 
 
     public void removeWord(String word) {
         try {
-log.info(word);
-forbiddenWordRepo.delete(forbiddenWordRepo.findByWord(word).get());
-
-            log.info("111111111111111");
+            log.info(word);
+            forbiddenWordRepo.delete(forbiddenWordRepo.findByWord(word).get());
             contentFilter.reloadForbiddenWords();
-            log.info("111111111111111");// 立即刷新
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
 
 
-    public  void manualRefresh() {
+    public void manualRefresh() {
         contentFilter.reloadForbiddenWords();
     }
 }

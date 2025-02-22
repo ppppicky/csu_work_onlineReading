@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface OrderService {
     List<Orders> queryOrders(OrderQueryDTO dto);
+
     ResponseEntity<String> createOrder(Orders orderRequest);
+
     ResponseEntity<String> payWithBalance(String orderId);
+
     ResponseEntity<String> cancelOrder(String orderId);
 }

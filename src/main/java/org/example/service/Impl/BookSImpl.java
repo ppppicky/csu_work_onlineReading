@@ -1,13 +1,15 @@
 package org.example.service.Impl;
+
 import lombok.extern.slf4j.Slf4j;
 import nl.siegmann.epublib.domain.Metadata;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.Resources;
 import nl.siegmann.epublib.epub.EpubReader;
-import org.example.dto.BookInfoDTO;
 import org.example.dto.BookChapterCombinationDTO;
+import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterDTO;
-import org.example.entity.*;
+import org.example.entity.Book;
+import org.example.entity.BookType;
 import org.example.mapper.BookMapper;
 import org.example.repository.*;
 import org.example.service.BookService;
@@ -22,7 +24,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,8 +44,6 @@ public class BookSImpl implements BookService {
     BookTypeRepository bookTypeRepository;
     @Autowired
     ChapterRepo chapterRepo;
-    @Autowired
-    BookMapper bookMapper;
     @Autowired
     ReadRepository readRepository;
     ////

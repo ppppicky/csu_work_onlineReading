@@ -28,49 +28,48 @@ public class ReadRecordSImpl implements ReadRecordService {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ReadMapper readMapper;
-    @Autowired
     BookRepository bookRepository;
 
 
     @Override
     public List<ReadRecordDTO> getAllRecordsByUserId(int userId) {
-       Users users=  userRepository.findById(userId)
-                .orElseThrow(()->new IllegalArgumentException("user not existed"));
-       List<ReadRecord>readRecords= readRepository.findByUser(users)
-               .orElseThrow(()->new IllegalArgumentException("book not been read yet"));
-        List<ReadRecordDTO> recordDTOS= readRecords.stream().map((item)->{
-        ReadRecordDTO dto=new ReadRecordDTO();
-        BeanUtils.copyProperties(item,dto);
+        Users users = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("user not existed"));
+        List<ReadRecord> readRecords = readRepository.findByUser(users)
+                .orElseThrow(() -> new IllegalArgumentException("book not been read yet"));
+        List<ReadRecordDTO> recordDTOS = readRecords.stream().map((item) -> {
+            ReadRecordDTO dto = new ReadRecordDTO();
+            BeanUtils.copyProperties(item, dto);
 
-        dto.setUserId(item.getUser().getUserId());
-        dto.setLastReadPage(item.getLastReadPage());
-        dto.setLastReadTime(item.getLastReadTime());
-        dto.setBookId(item.getBook().getBookId());
-        return dto;
-    }).collect(Collectors.toList());
+            dto.setUserId(item.getUser().getUserId());
+            dto.setLastReadPage(item.getLastReadPage());
+            dto.setLastReadTime(item.getLastReadTime());
+            dto.setBookId(item.getBook().getBookId());
+            return dto;
+        }).collect(Collectors.toList());
         return recordDTOS;
 
     }
 
     @Override
-    public ReadRecordDTO getLastRecordByUserId(int userId,int bookId) {
-        Users users=  userRepository.findById(userId)
-                .orElseThrow(()->new IllegalArgumentException("user not existed"));
+    public ReadRecordDTO getLastRecordByUserId(int userId, int bookId) {
+        Users users = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("user not existed"));
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
         ReadRecord record = readRepository.findByUserAndBook(users, book)
-                .orElseThrow(()->new IllegalArgumentException("book not been read yet"));
-        ReadRecordDTO dto=new ReadRecordDTO();
+                .orElseThrow(() -> new IllegalArgumentException("book not been read yet"));
+        ReadRecordDTO dto = new ReadRecordDTO();
         dto.setBookId(bookId);
         dto.setUserId(userId);
         dto.setLastReadTime(record.getLastReadTime());
         dto.setLastReadPage(record.getLastReadPage());
-        return  dto;
+        return dto;
     }
 
     /**
      * 处理新的阅读记录
+     *
      * @param dto
      */
     @Transactional

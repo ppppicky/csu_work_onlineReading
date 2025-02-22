@@ -7,13 +7,10 @@ import org.example.entity.Users;
 import java.util.List;
 
 public interface ReadRecordService {
-    public List<ReadRecordDTO> getAllRecordsByUserId(int userId) ;
+    List<ReadRecordDTO> getAllRecordsByUserId(int userId);
 
+    ReadRecordDTO getLastRecordByUserId(int userId, int bookId);
 
-    public ReadRecordDTO getLastRecordByUserId(int userId,int bookId) ;
-
-
-
-    public void processNewRecord(ReadRecordDTO record);
+    void processNewRecord(ReadRecordDTO record);
 
 }

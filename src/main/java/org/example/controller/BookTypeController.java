@@ -42,7 +42,7 @@ public class BookTypeController {
             bookTypeService.addType(typeName);
             return ResponseEntity.ok("booktype add successfully");
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("booktype existed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
         }
     }
 

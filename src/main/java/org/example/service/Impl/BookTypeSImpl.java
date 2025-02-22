@@ -20,12 +20,13 @@ public class BookTypeSImpl implements BookTypeService {
     @Override
     public void addType(String typeName) {
 
-       if( bookTypeRepository.findByBookTypeName(typeName)!=null){
+       if( bookTypeRepository.findByBookTypeName(typeName).isPresent()){
            throw new RuntimeException("booktype existed");
        }
 
         BookType bookType=new BookType();
        bookType.setBookTypeName(typeName);
+       log.info(bookType.toString());
        bookTypeRepository.save(bookType);
     }
 }

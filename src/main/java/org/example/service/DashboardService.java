@@ -8,15 +8,15 @@ import org.example.dto.UserBehaviorStatsDTO;
 import java.util.Map;
 
 public interface DashboardService {
-    public PurchaseStatsDTO getPurchaseStats();
+    PurchaseStatsDTO getPurchaseStats();
 
-    public void updateDashboardStats();
+    void updateDashboardStats();
 
-    public ChargeStatsDTO getChargeStats();
+    ChargeStatsDTO getChargeStats();
 
-    public BookReadingStatsDTO getBookReadingStats();
+    BookReadingStatsDTO getBookReadingStats();
 
-    public UserBehaviorStatsDTO getUserBehaviorStats();
+    UserBehaviorStatsDTO getUserBehaviorStats();
     //  public ChargeAnalysisDTO getChargeAnalysis()
 
     /**
