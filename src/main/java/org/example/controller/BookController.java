@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import cn.hutool.core.io.resource.InputStreamResource;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.BookInfoDTO;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -220,14 +223,20 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
             @ApiResponse(code = 404, message = "封面图片未找到")
     })
     @GetMapping("/coverPreview")
-    public ResponseEntity<CoverTempDTO> previewCover(
+    public  ResponseEntity<InputStreamResource>previewCover(
             @ApiParam(value = "rediskey", required = true) @RequestParam("tempKey") String tempKey) {
         CoverTempDTO cover=coverTempDealer.getTempCover(tempKey);
       //  CoverTempDTO cover = coverTempService.getTempCover(tempKey);
         if (cover.getImageData() == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(cover);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(cover.getImageData());
+        InputStreamResource resource = new InputStreamResource(inputStream);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // 确保是正确的图片格式
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+  //      return ResponseEntity.ok(cover);
     }
 
 }

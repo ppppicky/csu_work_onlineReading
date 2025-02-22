@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import com.sun.org.apache.regexp.internal.RE;
+//import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.BookInfoDTO;
@@ -38,7 +38,8 @@ public class ChapterController {
         //@RequestParam(defaultValue = "0") int page,
        // @RequestParam(defaultValue = "1000") int pageSize
                               ){
-            return chapterService.getChapterContent(chapterId);//分页
+        log.info("获取章节内容: {}",chapterId);
+        return chapterService.getChapterContent(chapterId);//分页
 
        // return chapterService.getChapterContent(chapterId);//不分页
     }
@@ -60,6 +61,7 @@ public class ChapterController {
             @PathVariable Integer chapterId,
             @RequestBody String newContent) {
 
+        log.info("更新章节内容: {}",chapterId);
         chapterService.updateChapterContent(chapterId,newContent);
         return ResponseEntity.ok("update successfully");
     }
@@ -76,6 +78,7 @@ public class ChapterController {
     @PutMapping("/updatename/{chapterId}")
     public ResponseEntity<String> updateChapterName(
             @PathVariable Integer chapterId, @RequestBody String newName) {
+        log.info("更新章节名称: {}",chapterId);
         chapterService.updateChapterName(chapterId,newName);
         return ResponseEntity.ok("update successfully");
     }
@@ -90,6 +93,7 @@ public class ChapterController {
     @PostMapping("/create/{bookId}")
     public ResponseEntity<String> createChapter(
             @PathVariable Integer bookId, @RequestBody ChapterDTO chapterDTO) {
+        log.info("创建章节: {}",bookId);
         try {
             chapterService.createChapter(bookId, chapterDTO);
             return ResponseEntity.ok().body("create chapter successfully");

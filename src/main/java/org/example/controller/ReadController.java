@@ -45,6 +45,7 @@ public class ReadController {
             @ApiResponse(code = 400, message = "请求错误")
     })
     public ResponseEntity<List<FontResource>> getAvailableFonts() {
+        log.info("获取所有可用字体");
         try {
             List<FontResource> list = readService.getAvailableFonts();
             return ResponseEntity.ok(list);
@@ -67,6 +68,7 @@ public class ReadController {
     @PostMapping("/font/add")
     public ResponseEntity<String> addFont(
             @ApiParam(value = "字体文件", required = true)@RequestParam("file") MultipartFile file){
+        log.info("上传新字体");
         try {
             readService.addFont(file);
             return ResponseEntity.ok("add font successfully");
@@ -89,6 +91,7 @@ public class ReadController {
     })
     public ResponseEntity<BackgroundDTO> uploadBackground(
             @ApiParam(value = "背景图片/视频文件", required = true) @RequestParam("file") MultipartFile file) {
+        log.info("上传背景图片/视频");
         try {
             BackgroundDTO preview = backgroundService.uploadTemporary(file);
             return ResponseEntity.ok(preview);
@@ -111,6 +114,7 @@ public class ReadController {
     @PostMapping("/background/upload/gradient")
     public ResponseEntity<BackgroundDTO> uploadBackground(
             @ApiParam(value = "渐变背景css字符串值", required = true)@RequestBody String gradient) {
+        log.info("上传渐变背景");
         try {
             BackgroundDTO preview = backgroundService.uploadTemporary(gradient);
             return ResponseEntity.ok(preview);
@@ -135,6 +139,7 @@ public class ReadController {
     public ResponseEntity<String> confirmBackground(
             @ApiParam(value = "临时背景ID", required = true)@RequestParam("tempId") String tempId,
             @ApiParam(value = "用户ID", required = true) @RequestParam("userId") Integer userId) {
+        log.info("确认背景保存");
         try {
             backgroundService.confirmSave(tempId, userId);
             return ResponseEntity.ok().build();
@@ -156,6 +161,7 @@ public class ReadController {
     })
     @GetMapping("/background/list/{userId}")
     public ResponseEntity<List<BackgroundDTO>> userBackgroundsList(@AuthenticationPrincipal Users user) {
+        log.info("获取用户所有背景");
         try {
            List<BackgroundDTO>  backgroundDTOS= backgroundService.getUserBackgrounds(user);
             return ResponseEntity.ok(backgroundDTOS);
@@ -176,6 +182,7 @@ public class ReadController {
     })
     @GetMapping("/background/{backgroundId}")
     public ResponseEntity<BackgroundDTO> getBackground(@PathVariable Integer backgroundId) {
+        log.info("获取指定背景");
         try {
             BackgroundDTO backgroundDTO = backgroundService.getBackground(backgroundId);
             return ResponseEntity.ok(backgroundDTO);
@@ -198,6 +205,7 @@ public class ReadController {
     })
     public ResponseEntity<ReadingSettingDTO> getUserSettings(
             @AuthenticationPrincipal Users user) {
+        log.info("获取用户阅读设置");
         try {
             ReadingSettingDTO settingDTO = readService.getUserSettings(user);
 
@@ -223,6 +231,7 @@ public class ReadController {
             //@AuthenticationPrincipal Users user,
             @RequestParam("userId")Integer userId,
             @Valid @RequestBody ReadingSettingDTO settingDTO) {
+        log.info("保存用户阅读设置");
         try {
             readService.updateUserSetting(userId, settingDTO);
             return ResponseEntity.ok("reading setting successfully");

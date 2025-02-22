@@ -30,6 +30,7 @@ public class UserController {
     @ApiOperation(value = "用户注册")
     public ResponseEntity<String>register(@RequestBody Users user, HttpSession session){
 //        log.info(user.getUserName());
+        log.info("用户注册");
         if( userService.findUser(user.getUserName())){
             log.info("User already exists");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
@@ -49,6 +50,7 @@ public class UserController {
     @PostMapping("/login")
     @ApiOperation(value = "用户登录")
     public ResponseEntity<String> login(@RequestBody Users user, HttpSession session) {
+        log.info("用户登录");
         if (!userService.findUser(user.getUserName())) {
             log.info("User doesn't exist");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User doesn't exist");
@@ -74,6 +76,7 @@ public class UserController {
     @ApiOperation(value = "用户登出")
     public ResponseEntity<String> logout(HttpSession session) {
   //      session.removeAttribute("user");
+        log.info("用户登出");
         session.invalidate(); // 让Session失效，删除所有存储的用户信息
         return ResponseEntity.ok("logout successfully");
     }
@@ -86,6 +89,7 @@ public class UserController {
     @GetMapping("/info/{userName}")
     @ApiOperation(value = "获取用户个人信息")
     public ResponseEntity<?> getUserInfo(@PathVariable String userName) {
+        log.info("获取用户个人信息");
         Users user = userService.getUserByUserName(userName);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");

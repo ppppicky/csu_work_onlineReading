@@ -30,6 +30,7 @@ public class BoughtBookController {
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "查询用户已购书籍列表")
     public ResponseEntity<List<Book>> getBoughtBooksByUserId(@PathVariable Integer userId) {
+        log.info("查询用户已购书籍列表，用户ID：{}", userId);
         List<Book> books = boughtBookService.getBoughtBooksByUserId(userId);
         return books.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(books);
     }
@@ -40,6 +41,7 @@ public class BoughtBookController {
     @GetMapping("/user/{userId}/book/{bookId}")
     @ApiOperation(value = "检查用户是否已购买指定书籍")
     public ResponseEntity<Boolean> hasUserBoughtBook(@PathVariable Integer userId, @PathVariable Integer bookId) {
+        log.info("检查用户是否已购买指定书籍，用户ID：{}，书籍ID：{}", userId, bookId);
         return ResponseEntity.ok(boughtBookService.hasUserBoughtBook(userId, bookId));
     }
 }

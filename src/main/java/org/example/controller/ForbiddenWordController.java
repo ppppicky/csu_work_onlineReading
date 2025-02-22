@@ -20,6 +20,7 @@ public class ForbiddenWordController {
 
     @PostMapping("/add")
     public ForbiddenWord addWord(@RequestBody String word) {
+        log.info("违禁词管理");
              return forbiddenService.addWord(word);
 
 

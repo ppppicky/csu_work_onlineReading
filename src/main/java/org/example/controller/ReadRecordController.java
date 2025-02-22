@@ -42,6 +42,7 @@ public class ReadRecordController {
     @PostMapping("/save")
     public ResponseEntity<?> save(
             @ApiParam(value = "阅读记录信息", required = true) @Valid @RequestBody ReadRecordDTO dto, HttpSession session) {
+        log.info("保存阅读进度: {}", dto);
         try {
             readService.processNewRecord(dto);
             return ResponseEntity.ok().build();
@@ -66,6 +67,7 @@ public class ReadRecordController {
     public ResponseEntity<List<ReadRecordDTO>> getUsersAllRecord(
             //  @AuthenticationPrincipal Users users)
             @PathVariable Integer userId) {
+        log.info("获取用户的所有阅读记录: {}", userId);
         try {
             return ResponseEntity.ok().body(readService.getAllRecordsByUserId(userId));
         } catch (Exception e) {
@@ -89,6 +91,7 @@ public class ReadRecordController {
             //  @AuthenticationPrincipal Users users
             //   @RequestParam("userId")Integer userId
     ) {
+        log.info("获取书籍阅读进度: {}", bookId);
         try {
             return ResponseEntity.ok().body(readService.getLastRecordByUserId(userId, bookId));
         } catch (Exception e) {

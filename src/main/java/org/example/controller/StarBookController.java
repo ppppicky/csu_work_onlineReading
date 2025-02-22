@@ -27,6 +27,7 @@ public class StarBookController {
     @PostMapping("/toggle")
     @ApiOperation(value = "收藏或取消收藏书籍")
     public ResponseEntity<String> toggleStarBook(@RequestParam Integer userId, @RequestParam Integer bookId) {
+        log.info("收藏或取消收藏书籍 userId={}, bookId={}", userId, bookId);
         String result = starBookService.toggleStarBook(userId, bookId);
         return ResponseEntity.ok(result);
     }
@@ -39,6 +40,7 @@ public class StarBookController {
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "查询用户收藏书籍列表")
     public ResponseEntity<List<Book>> getStarBooksByUserId(@PathVariable Integer userId) {
+        log.info("查询用户收藏书籍列表 userId={}", userId);
         List<Book> books = starBookService.getStarBooksByUserId(userId);
         return books.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(books);
     }
@@ -53,6 +55,7 @@ public class StarBookController {
     @GetMapping("/user/{userId}/book/{bookId}")
     @ApiOperation(value = "检查用户是否收藏指定书籍")
     public ResponseEntity<Boolean> hasUserStarBook(@PathVariable Integer userId, @PathVariable Integer bookId) {
+        log.info("检查用户是否收藏指定书籍 userId={}, bookId={}", userId, bookId);
         boolean hasStar = starBookService.hasUserStarBook(userId, bookId);
         return ResponseEntity.ok(hasStar);
     }

@@ -53,6 +53,7 @@ public class AliPayController {
     @GetMapping("/pay")
     @ApiOperation(value = "生成支付宝支付请求")
     public ResponseEntity<String> pay(AliPay aliPay, HttpServletResponse httpResponse) throws IOException {
+        log.info("========= 生成支付宝支付请求 =========");
         // **1. 查询订单**
         Optional<Orders> optionalOrder = ordersRepository.findByOrderId(aliPay.getTraceNo());
         if (!optionalOrder.isPresent()) {
