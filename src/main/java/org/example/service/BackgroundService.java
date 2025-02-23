@@ -14,5 +14,4 @@ public interface BackgroundService {
     BackgroundDTO getBackground(Integer resourceId) throws IOException;
 
     BackgroundDTO uploadTemporary(String gradient);
-    //private ResourceType determineResourceType(String mimeType) ;
 }
