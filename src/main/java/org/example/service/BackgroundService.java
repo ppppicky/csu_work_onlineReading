@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface BackgroundService {
     BackgroundDTO uploadTemporary(MultipartFile file);
-    void confirmSave(String resourceId, Integer userId) throws IOException;
-    List<BackgroundDTO> getUserBackgrounds(Users user) ;
-    BackgroundDTO getBackground(Integer resourceId) throws IOException;
-
+    void confirmSave(String resourceId, Integer userId) throws Exception;
     BackgroundDTO uploadTemporary(String gradient);
+    List<String> getUserBackgroundsUrl(Users user);
+
+    String getBackgroundUrl(Integer resourceId) throws Exception;
 }

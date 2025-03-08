@@ -1,0 +1,67 @@
+<!-- register.html 注册页面 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    <style>
+        /* 样式与登录页面相同 */
+        /* 实际开发中建议将公共样式提取到单独CSS文件 */
+        body { /* 同登录页面 */ }
+        .container { /* 同登录页面 */ }
+        h1 { color: #34a853; } /* 修改主题色 */
+        /* 其余样式同登录页面 */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>用户注册</h1>
+        <form id="registerForm">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">注册</button>
+            <div class="error" id="errorMsg"></div>
+        </form>
+        <div class="link">
+            <a href="index.html">已有账号？立即登录</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:8080/user/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userName: username,
+                        userPassword: password
+                    })
+                });
+
+                const data = await response.text();
+                if (response.ok) {
+                    alert('注册成功！');
+                    window.location.href = 'index.html';
+                } else {
+                    document.getElementById('errorMsg').textContent = data;
+                }
+            } catch (error) {
+                document.getElementById('errorMsg').textContent = '注册请求失败';
+            }
+        });
+    </script>
+</body>
+</html>

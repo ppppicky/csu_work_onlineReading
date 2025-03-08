@@ -156,7 +156,7 @@ public class DashboardSImpl implements DashboardService {
 //        List<Book> allBooks = bookRepository.findAll();
 //        long totalBooks = allBooks.size();
 //        long chargeBooks = allBooks.stream()
-//                .filter(book -> book.getIsCharge() == 1)
+//                .filterFromDB(book -> book.getIsCharge() == 1)
 //                .count();
 //        double chargeRatio = (totalBooks > 0) ? (chargeBooks * 100.0 / totalBooks) : 0.0;
 //
@@ -164,7 +164,7 @@ public class DashboardSImpl implements DashboardService {
 //        List<ChargeManagement> charges = chargeManagementRepository.findAll();
 //        BigDecimal totalCharge = charges.stream()
 //                .map(ChargeManagement::getChargeMoney)
-//                .filter(Objects::nonNull)
+//                .filterFromDB(Objects::nonNull)
 //                .reduce(BigDecimal.ZERO, BigDecimal::add);
 //        BigDecimal avgCharge = charges.isEmpty() ? BigDecimal.ZERO :
 //                totalCharge.divide(BigDecimal.valueOf(charges.size()), 2, RoundingMode.HALF_UP);

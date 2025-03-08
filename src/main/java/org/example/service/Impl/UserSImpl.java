@@ -15,14 +15,8 @@ import java.time.LocalDateTime;
 @Service
 public class UserSImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-
     @Autowired
-    public UserSImpl(UserRepository ur, UserMapper um) {
-        userRepository = ur;
-        userMapper = um;
-    }
+    UserRepository userRepository;
 
     @Override
     public boolean findUser(String userName) {

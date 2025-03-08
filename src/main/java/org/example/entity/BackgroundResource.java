@@ -23,14 +23,11 @@ public class BackgroundResource {
     @Column(nullable = false)
     private BackgroundType resourceType; // IMAGE/GIF/VIDEO/ GRADIENT
 
-    @Column(nullable = false)
-    private String storagePath;
+   @Column(nullable = false) // 修改字段名和数据库列名
+   private String storageKey; // 存储 MinIO 对象键（如 "permanent/uuid.jpg"）
 
-    private String thumbnailPath;//资源缩略图路径，方便预览
-
-    @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime = LocalDateTime.now();
 
-    private Long fileSize;
+  //  private Long fileSize;
 }

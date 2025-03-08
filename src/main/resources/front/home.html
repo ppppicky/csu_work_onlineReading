@@ -1,0 +1,90 @@
+<!-- home.html 主页 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户主页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 0.5rem 1rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #bb2d3b;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>欢迎回来，<span id="username"></span>！</h1>
+        <button onclick="logout()">退出登录</button>
+    </div>
+
+    <div class="user-info">
+        <h2>用户信息</h2>
+        <p>用户名：<span id="info-username"></span></p>
+        <!-- 可根据实际接口返回字段扩展 -->
+    </div>
+
+    <script>
+        // 页面加载时获取用户信息
+        async function loadUserInfo() {
+            const username = localStorage.getItem('currentUser');
+            if (!username) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/user/info/${username}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    document.getElementById('username').textContent = user.userName;
+                    document.getElementById('info-username').textContent = user.userName;
+                } else {
+                    alert('获取用户信息失败');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('http://localhost:8080/user/logout', {
+                    method: 'POST'
+                });
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('登出失败:', error);
+            }
+        }
+
+        // 初始化加载用户信息
+        loadUserInfo();
+    </script>
+</body>
+</html>

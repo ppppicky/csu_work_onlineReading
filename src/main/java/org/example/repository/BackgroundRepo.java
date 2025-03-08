@@ -11,8 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RedisHash
-public interface BackgroundRepo extends JpaRepository<BackgroundResource,Integer> {
+public interface BackgroundRepo extends JpaRepository<BackgroundResource, Integer> {
     Optional<List<BackgroundResource>> findByUser(Users user);
-
-    Optional<BackgroundResource> findByStoragePath(String backgroundUrl);
+    Optional<BackgroundResource> findByStorageKey(String storageKey);
 }

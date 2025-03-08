@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Api(value = "图书管理接口", tags = "图书管理接口")
@@ -66,33 +67,40 @@ public class BookController {
 //            return ResponseEntity.status(500).body("Error:" + e.getMessage());
 //        }
 //    }
-@ApiOperation(value = "解析EPUB书籍", notes = "上传EPUB文件并返回书籍元数据和章节目录")
-@ApiResponses({
-        @ApiResponse(code = 200, message = "解析成功", response = BookChapterCombinationDTO.class),
-        @ApiResponse(code = 400, message = "解析失败")
-})
-@PostMapping("/parse")
-public ResponseEntity<BookChapterCombinationDTO> parseBook(
-        @ApiParam(value = "上传的EPUB文件", required = true)
-        @RequestParam("file") MultipartFile file) {
-    try {
-        File tempFile = File.createTempFile("epub-", ".epub");
-        file.transferTo(tempFile);
-        BookChapterCombinationDTO result = bookService.parseEpub(tempFile);
-        return ResponseEntity.ok(result);
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().build();
+
+
+    @ApiOperation(value = "解析EPUB书籍", notes = "上传EPUB文件并返回书籍元数据和章节目录")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "解析成功", response = BookChapterCombinationDTO.class),
+            @ApiResponse(code = 400, message = "解析失败")
+    })
+
+    @PostMapping("/parse")
+    public CompletableFuture<ResponseEntity<BookChapterCombinationDTO>> parseBook(
+            @RequestParam("file") MultipartFile file) {
+        try {
+            File tempFile = File.createTempFile("epub-", ".epub");
+            file.transferTo(tempFile);
+            return bookService.parseEpubAsync(tempFile).
+                    thenApply(ResponseEntity::ok) // 异步返回解析成功的结果
+                    .exceptionally(e -> {
+                        log.error("EPUB 解析失败", e);
+                        return ResponseEntity.badRequest().build();
+                    });
+        } catch (Exception e) {
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
+        }
     }
-}
 
     /**
      * 获取图书目录信息
+     *
      * @param bookId
      * @return 章节目录列表
      */
     @ApiOperation(value = "获取书籍目录", notes = "根据书籍 ID 获取章节目录")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "返回章节目录列表",response = ChapterDTO.class),
+            @ApiResponse(code = 200, message = "返回章节目录列表", response = ChapterDTO.class),
             @ApiResponse(code = 404, message = "书籍未找到")
     })
     @GetMapping("/{bookId}/toc")
@@ -103,14 +111,15 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
 
     /**
      * 删除书籍
+     *
      * @param bookId
      * @param session
      * @return
      */
     @ApiOperation(value = "删除书籍", notes = "删除书籍及其相关章节")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "书籍删除成功",response = String.class),
-            @ApiResponse(code = 500, message = "服务器内部错误",response = String.class)
+            @ApiResponse(code = 200, message = "书籍删除成功", response = String.class),
+            @ApiResponse(code = 500, message = "服务器内部错误", response = String.class)
     })
     @DeleteMapping("/delete/{bookId}")
     ResponseEntity<String> deleteBook(
@@ -133,19 +142,21 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
             @ApiResponse(code = 404, message = "书籍未找到")
     })
     @GetMapping("/{bookId}")
-    ResponseEntity<BookInfoDTO>getBookInfo(
-            @ApiParam(value = "书籍ID", required = true) @PathVariable Integer bookId, HttpSession session){
-        BookInfoDTO bookInfoDTO=new BookInfoDTO();
-      try {
-          return ResponseEntity.ok().body(bookService.getBook(bookId));
-      }catch (Exception e){
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-      }
+    ResponseEntity<BookInfoDTO> getBookInfo(
+            @ApiParam(value = "书籍ID", required = true) @PathVariable Integer bookId, HttpSession session) {
+        BookInfoDTO bookInfoDTO = new BookInfoDTO();
+        try {
+            return ResponseEntity.ok().body(bookService.getBook(bookId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
     /**
      * 查看书籍列表（支持分页 & 模糊查询）
-     * @param page 当前页码
-     * @param size 每页大小
+     *
+     * @param page    当前页码
+     * @param size    每页大小
      * @param keyword 模糊查询关键词（可选）
      * @return 书籍列表（分页）
      */
@@ -160,6 +171,7 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
         Page<BookInfoDTO> books = bookService.getBooksList(keyword, pageable);
         return ResponseEntity.ok(books);
     }
+
     @GetMapping("/list/{typeName}")
     ResponseEntity<Page<BookInfoDTO>> getBooksByType(
             @RequestParam(defaultValue = "0") int page,
@@ -178,13 +190,13 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     })
     @PostMapping("/update")
     ResponseEntity<String> updateBook(
-            @ApiParam(value = "书籍详细信息", required = true)@RequestBody BookInfoDTO bookInfoDTO, HttpSession session){
-       try {
-           bookService.updateBook(bookInfoDTO);
-           return ResponseEntity.ok("update successfully");
-       }catch (Exception e){
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-       }
+            @ApiParam(value = "书籍详细信息", required = true) @RequestBody BookInfoDTO bookInfoDTO, HttpSession session) {
+        try {
+            bookService.updateBook(bookInfoDTO);
+            return ResponseEntity.ok("update successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @ApiOperation(value = "创建书籍", notes = "创建一本新书籍")
@@ -194,11 +206,11 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     })
     @PostMapping("/create")
     ResponseEntity<String> createBook(
-            @ApiParam(value = "书籍详细信息", required = true) @RequestBody BookChapterCombinationDTO combinationDTO,HttpSession session){
+            @ApiParam(value = "书籍详细信息", required = true) @RequestBody BookChapterCombinationDTO combinationDTO, HttpSession session) {
         try {
             bookService.createBook(combinationDTO);
             return ResponseEntity.ok("update successfully");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -211,7 +223,7 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
     })
     @PostMapping(value = "/uploadCover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CoverTempDTO> uploadCover(
-            @ApiParam(value = "封面图片文件", required = true)@RequestParam("file") MultipartFile file) throws IOException {
+            @ApiParam(value = "封面图片文件", required = true) @RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(coverTempDealer.saveTempCover(file));
     }
 
@@ -221,9 +233,9 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
             @ApiResponse(code = 404, message = "封面图片未找到")
     })
     @GetMapping("/coverPreview")
-    public  ResponseEntity<InputStreamResource>previewCover(
+    public ResponseEntity<InputStreamResource> previewCover(
             @ApiParam(value = "rediskey", required = true) @RequestParam("tempKey") String tempKey) {
-        CoverTempDTO cover=coverTempDealer.getTempCover(tempKey);
+        CoverTempDTO cover = coverTempDealer.getTempCover(tempKey);
         if (cover.getImageData() == null) {
             return ResponseEntity.notFound().build();
         }
@@ -233,7 +245,7 @@ public ResponseEntity<BookChapterCombinationDTO> parseBook(
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG); // 确保是正确的图片格式
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-  //      return ResponseEntity.ok(cover);
+        //      return ResponseEntity.ok(cover);
     }
 
 }

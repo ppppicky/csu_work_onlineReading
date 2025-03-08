@@ -18,9 +18,11 @@ import java.util.stream.Collectors;
 public class StarBookServiceImpl implements StarBookService {
 
 
-    private final StarBookRepository starBookRepository;
+    @Autowired
+    StarBookRepository starBookRepository;
 
-    private final BookRepository bookRepository;
+    @Autowired
+    BookRepository bookRepository;
 
     @Autowired
     public StarBookServiceImpl(StarBookRepository starBookRepository, BookRepository bookRepository) {

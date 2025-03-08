@@ -80,7 +80,7 @@ public class ReadRecordSImpl implements ReadRecordService {
         Book book = bookRepository.findById(dto.getBookId())
                 .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
         if (dto.getLastReadPage() != null && dto.getLastReadPage() > book.getBookPage()) {
-            throw new GlobalException.InvalidPageException("page out of index");
+            throw new GlobalException.InvalidPageException("page out of createIndex");
         }
 
         ReadRecord record = readRepository.findByUserAndBook(user, book)

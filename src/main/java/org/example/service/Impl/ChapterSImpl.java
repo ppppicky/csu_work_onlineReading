@@ -41,7 +41,7 @@ public class ChapterSImpl implements ChapterService {
     public PaginatedContent getChapterContent(Integer chapterId, int pageSize) {
         BookChapter chapter = chapterRepo.findById(chapterId)
                 .orElseThrow(() -> new RuntimeException("章节不存在"));
-        List<String> pages = splitContentToPages(chapter.getContent(), pageSize);
+        List<String> pages = splitContentToPages(contentFilter.filterFromDB(chapter.getContent()), pageSize);
         return new PaginatedContent(pages, pages.size());
     }
 
@@ -55,7 +55,7 @@ public class ChapterSImpl implements ChapterService {
     public String getChapterContent(Integer chapterId) {
         BookChapter chapter = chapterRepo.findById(chapterId)
                 .orElseThrow(() -> new RuntimeException("章节不存在"));
-        return chapter.getContent();
+        return contentFilter.filterFromDB(chapter.getContent());
     }
 
     /**
@@ -66,7 +66,7 @@ public class ChapterSImpl implements ChapterService {
      */
     @Override
     public void updateChapterContent(Integer chapterId, String newContent) {
-        String filteredContent = contentFilter.filter(newContent);
+        String filteredContent = contentFilter.filterFromFile(newContent);
         BookChapter chapter = chapterRepo.findById(chapterId)
                 .orElseThrow(() -> new IllegalArgumentException("chapter not existed"));
         chapter.setContent(filteredContent);
@@ -85,7 +85,7 @@ public class ChapterSImpl implements ChapterService {
      */
     @Override
     public void updateChapterName(Integer chapterId, String newName) {
-        String filteredContent = contentFilter.filter(newName);
+        String filteredContent = contentFilter.filterFromDB(newName);
         BookChapter chapter = chapterRepo.findById(chapterId)
                 .orElseThrow(() -> new IllegalArgumentException("chapter not existed"));
         chapter.setChapterName(filteredContent);
@@ -113,7 +113,9 @@ public class ChapterSImpl implements ChapterService {
         bookChapter.setBookId(book.getBookId());
         bookChapter.setChapterName(chapterDTO.getChapterName());
         bookChapter.setChapterNum(chapterDTO.getChapterId());
-        bookChapter.setContent(contentFilter.filter(chapterDTO.getContent()));
+        //bookChapter.setContent(chapterDTO.getContent());
+        bookChapter.setContent(contentFilter.filterFromFile(chapterDTO.getContent()));
+        //   bookChapter.setContent(contentFilter.filterFromDB(chapterDTO.getContent()));
         bookChapter.setCreateTime(LocalDateTime.now());
         bookChapter.setUpdateTime(LocalDateTime.now());
         chapterRepo.save(bookChapter);
@@ -129,7 +131,7 @@ public class ChapterSImpl implements ChapterService {
     private List<String> splitContentToPages(String content, int pageSize) {
         List<String> pages = new ArrayList<>();  // 用于存储分页后的内容
         int length = content.length();  // 获取内容的长度
-
+        content = contentFilter.filterFromDB(content);
         for (int i = 0; i < length; i += pageSize) {
             pages.add(content.substring(i, Math.min(i + pageSize, length)));  // 截取并添加每一页的内容
         }

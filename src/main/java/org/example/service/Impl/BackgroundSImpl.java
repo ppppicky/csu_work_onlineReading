@@ -1,6 +1,5 @@
 package org.example.service.Impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,8 @@ import org.example.entity.Users;
 import org.example.repository.BackgroundRepo;
 import org.example.repository.UserRepository;
 import org.example.service.BackgroundService;
-import org.example.util.BackgroundFileDealer;
+import org.example.util.BackgroundDealer;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,10 +22,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -44,100 +42,91 @@ public class BackgroundSImpl implements BackgroundService {
     @Qualifier("stringRedisTemplate")
     private RedisTemplate<String, String> redisTemplate;
 
-    private BackgroundFileDealer backgroundFileDealer = new BackgroundFileDealer();
+    @Autowired
+    BackgroundDealer fileDealer ;
     private static final String TEMP_BG_PREFIX = "temp_bg:";
     private static final long TEMP_EXPIRE_TIME = 6000; // 30 分钟过期
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-    @Override
-    public BackgroundDTO uploadTemporary(MultipartFile file) {
-        objectMapper.registerModule(new JavaTimeModule());
-        BackgroundDTO tmpBackground = new BackgroundDTO();
-        try {
-            BackgroundType resourceType = determineResourceType(file.getContentType());
-            byte[] fileData = backgroundFileDealer.saveTemporary(file); // 获取文件的 byte[]
-            byte[] thumbnailData = backgroundFileDealer.generateThumbnail(fileData, resourceType);
-//            String tempPath = backgroundFileDealer.saveTemporary(file);
-//            String thumbnailPath = backgroundFileDealer.generateThumbnail(tempPath,resourceType);
-            tmpBackground.setFileSize(file.getSize());
-            tmpBackground.setId(UUID.randomUUID().toString());
-            tmpBackground.setResourceType(resourceType);
-            tmpBackground.setStoragePath(fileData); // 存储文件的 byte[]
-            // tmpBackground.setStoragePath(tempPath);
-            // tmpBackground.setThumbnailPath(thumbnailPath);
-            tmpBackground.setCreateTime(LocalDateTime.now());
+@Override
+public BackgroundDTO uploadTemporary(MultipartFile file) {
+    BackgroundDTO tmpBackground = new BackgroundDTO();
+    try {
+        String tempObjectName = fileDealer.saveTemporary(file);
+        tmpBackground.setId(UUID.randomUUID().toString());
+        tmpBackground.setStorageKey(tempObjectName);
+        tmpBackground.setResourceType(determineResourceType(file.getContentType()));
 
-            // 存入 Redis，30 分钟后自动删除
-            String jsonData = objectMapper.writeValueAsString(tmpBackground);
-            redisTemplate.opsForValue().set(TEMP_BG_PREFIX + tmpBackground.getId(), jsonData, TEMP_EXPIRE_TIME, TimeUnit.MINUTES);
-        } catch (Exception e) {
-            log.error("背景上传失败: {}", e.getMessage());
-        }
-        return tmpBackground;
+        // 存储元数据到 Redis（如文件类型、大小等）
+        String jsonData = objectMapper.writeValueAsString(tmpBackground);
+        redisTemplate.opsForValue().set(
+                TEMP_BG_PREFIX + tmpBackground.getId(),
+                jsonData,
+                30, TimeUnit.MINUTES  // 30分钟后自动过期
+        );
+    } catch (Exception e) {
+        log.error("临时资源上传失败", e);
     }
-
+    return tmpBackground;
+}
     @Override
     public BackgroundDTO uploadTemporary(String gradient) {
         objectMapper.registerModule(new JavaTimeModule());
         BackgroundDTO tmpBackground = new BackgroundDTO();
         try {
-            Image image = backgroundFileDealer.generateGradientImage(gradient, 1600, 900);
-            tmpBackground.setId(UUID.randomUUID().toString());
+            Image image = fileDealer.generateGradientImage(gradient, 1600, 900);
+       //     tmpBackground.setId(UUID.randomUUID().toString());
             tmpBackground.setResourceType(BackgroundType.GRADIENT);
 
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 ImageIO.write((RenderedImage) image, "jpg", baos);
-                tmpBackground.setStoragePath(baos.toByteArray());
-                tmpBackground.setFileSize(Long.valueOf(baos.toByteArray().length));
+                byte[] imageData = baos.toByteArray();
+                String tempObjectName = fileDealer.saveTemporary(
+                        imageData,
+                        "gradient.jpg",
+                        "image/jpeg"
+                );
+                tmpBackground.setStorageKey(tempObjectName);
+                tmpBackground.setResourceType(BackgroundType.GRADIENT);
+                tmpBackground.setId(UUID.randomUUID().toString());
+                String jsonData = objectMapper.writeValueAsString(tmpBackground);
+                redisTemplate.opsForValue().set(
+                        TEMP_BG_PREFIX + tmpBackground.getId(),
+                        jsonData,
+                        TEMP_EXPIRE_TIME, TimeUnit.MINUTES
+                );
             }
 
-            tmpBackground.setCreateTime(LocalDateTime.now());
-
-            // 存入 Redis，30 分钟后自动删除
-            String jsonData = objectMapper.writeValueAsString(tmpBackground);
-            redisTemplate.opsForValue().set(TEMP_BG_PREFIX + tmpBackground.getId(), jsonData, TEMP_EXPIRE_TIME, TimeUnit.MINUTES);
         } catch (Exception e) {
             log.error("背景上传失败: {}", e.getMessage());
         }
         return tmpBackground;
     }
-
     @Override
-    public void confirmSave(String resourceId, Integer userId) throws IOException {
-        objectMapper.registerModule(new JavaTimeModule());
+    public void confirmSave(String resourceId, Integer userId) throws Exception {
+        // 从 Redis 获取元数据
         String jsonData = redisTemplate.opsForValue().get(TEMP_BG_PREFIX + resourceId);
-        if (jsonData == null) {
-            throw new IllegalArgumentException("预览信息不存在或已过期");
-        }
-        BackgroundDTO tmp = new BackgroundDTO();
-        try {
-            tmp = objectMapper.readValue(jsonData, BackgroundDTO.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            log.error("JSON 解析失败: {}", e.getMessage());
-        }
+        BackgroundDTO tmp = objectMapper.readValue(jsonData, BackgroundDTO.class);
 
+        // 移动文件到永久存储
+        String permanentKey = fileDealer.moveToPermanent(tmp.getStorageKey());
         Users users = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
+                .orElseThrow(() -> new GlobalException.UserNotFoundException("user not existed"));
 
-
-        String fileName = UUID.randomUUID() + getFileExtension(tmp.getResourceType());
-        String finalPath = backgroundFileDealer.moveToPermanent(tmp.getStoragePath(), fileName);
-
+        // 保存到数据库
         BackgroundResource resource = new BackgroundResource();
-        resource.setResourceType(tmp.getResourceType());
-        resource.setFileSize(tmp.getFileSize());
+        resource.setStorageKey(permanentKey);
         resource.setUser(users);
-        resource.setStoragePath(finalPath); // 修改这里
-        //   resource.setThumbnailPath(tmp.getThumbnailPath());
+        resource.setResourceType(tmp.getResourceType());
         resource.setCreateTime(LocalDateTime.now());
-
+        //resource.setUser(userRepository.findById(userId).orElseThrow());
         backgroundRepo.save(resource);
 
-        redisTemplate.delete(TEMP_BG_PREFIX + resourceId); // 确认保存后删除 Redis 记录
-
+        // 清理 Redis 记录
+        redisTemplate.delete(TEMP_BG_PREFIX + resourceId);
     }
+
 
     private BackgroundType determineResourceType(String mimeType) {
         if (mimeType.equals("image/gif")) {
@@ -151,44 +140,31 @@ public class BackgroundSImpl implements BackgroundService {
         }
     }
 
+@Override
+public List<String> getUserBackgroundsUrl(Users user) {
 
-    @Override
-    public List<BackgroundDTO> getUserBackgrounds(Users user) {
-        List<BackgroundResource> resources = backgroundRepo.findByUser(user)
-                .orElseThrow(() -> new IllegalArgumentException("no background"));
-
-        List<BackgroundDTO> backgroundDTOS = resources.stream().map((BackgroundResource resource) -> {
-            BackgroundDTO dto = new BackgroundDTO();
-            dto.setId(String.valueOf(resource.getBackgroundId()));
-            dto.setResourceType(resource.getResourceType());
-            File file = new File(resource.getStoragePath());
-            try {
-                dto.setStoragePath(Files.readAllBytes(file.toPath()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    List<BackgroundResource> resources = backgroundRepo.findByUser(user)
+            .orElse(Collections.emptyList());
+    List<String> urls = resources.stream().map(
+            (resource) -> {
+                try {
+                    return fileDealer.getPresignedUrl(resource.getStorageKey());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
-            //   dto.setThumbnailPath(resource.getThumbnailPath());
-            dto.setFileSize(resource.getFileSize());
-            dto.setCreateTime(resource.getCreateTime());
-            return dto;
-        }).collect(Collectors.toList());
-
-        return backgroundDTOS;
-    }
+    ).collect(Collectors.toList());
+    return urls;
+}
 
     @Override
-    public BackgroundDTO getBackground(Integer resourceId) throws IOException {
-        BackgroundResource backgroundResource = backgroundRepo.findById(resourceId)
-                .orElseThrow(() -> new IllegalArgumentException("background not existed"));
-        BackgroundDTO backgroundDTO = new BackgroundDTO();
-        backgroundDTO.setResourceType(backgroundResource.getResourceType());
-        backgroundDTO.setFileSize(backgroundResource.getFileSize());
-        backgroundDTO.setId(String.valueOf(backgroundResource.getBackgroundId()));
-        File file = new File(backgroundResource.getStoragePath());
-        backgroundDTO.setStoragePath(Files.readAllBytes(file.toPath()));
-        //  backgroundDTO.setThumbnailPath(backgroundResource.getThumbnailPath());
-        return backgroundDTO;
+    public String getBackgroundUrl(Integer resourceId) throws Exception {
+        BackgroundResource resource = backgroundRepo.findById(resourceId)
+                .orElseThrow(() -> new IllegalArgumentException("背景资源不存在"));
+        return fileDealer.getPresignedUrl(resource.getStorageKey());
+
     }
+
 
     private String getFileExtension(BackgroundType resourceType) {
         switch (resourceType) {

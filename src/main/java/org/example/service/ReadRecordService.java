@@ -1,8 +1,6 @@
 package org.example.service;
 
 import org.example.dto.ReadRecordDTO;
-import org.example.entity.ReadRecord;
-import org.example.entity.Users;
 
 import java.util.List;
 

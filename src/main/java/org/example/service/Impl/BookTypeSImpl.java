@@ -26,7 +26,7 @@ public class BookTypeSImpl implements BookTypeService {
 
         BookType bookType=new BookType();
        bookType.setBookTypeName(typeName);
-       log.info(bookType.toString());
+       //log.info(bookType.toString());
        bookTypeRepository.save(bookType);
     }
 }

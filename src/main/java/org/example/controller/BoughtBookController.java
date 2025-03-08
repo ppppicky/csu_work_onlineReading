@@ -20,12 +20,8 @@ import java.util.List;
 @Api(tags = "已购书籍管理")
 public class BoughtBookController {
 
-    private final BoughtBookService boughtBookService;
-
     @Autowired
-    public BoughtBookController(BoughtBookService boughtBookService) {
-        this.boughtBookService = boughtBookService;
-    }
+    BoughtBookService boughtBookService;
 
     /**
      * 查询用户已购书籍列表

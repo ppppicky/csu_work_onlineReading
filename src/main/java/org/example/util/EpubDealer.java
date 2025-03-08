@@ -180,7 +180,7 @@ public class EpubDealer {
             }
 
             String rawContent = content.toString().trim();
-            return contentFilter.filter(rawContent);
+            return contentFilter.filterFromDB(rawContent);
         } catch (Exception e) {
             System.out.println("解析章节内容失败: " + e.getLocalizedMessage());
             return "";

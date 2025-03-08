@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8080
 
 spring:
   application:
@@ -26,6 +26,15 @@ spring:
   cache:
     redis:
       time-to-live: 1800000 #缓存过期时间
+  elasticsearch:
+    cluster-nodes: localhost:9200
+    index:
+        auto-create: true
+    rest:
+      uris: http://localhost:9200
+      #    repositories:
+      #      enabled: true
+
 
 mybatis:
   configuration:
@@ -45,9 +54,20 @@ alipay:
   notify-url: http://syvn9v.natappfree.cc/alipay/notify
   return-url: http://syvn9v.natappfree.cc/alipay/result
 
+minio:
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket:
+    adverts: adverts
+    backgrounds: backgrounds
+    temp: temp
+
 advertisement:
   daily-limit: 5  # 每日广告观看上限
 
+keywords:
+  totals: 5
 
 
 #myStaticLocation: "/src/main/resources/static/"

@@ -16,22 +16,19 @@ import java.util.Optional;
 @Service
 public class ChargeSImpl implements ChargeService {
 
-    private final ChargeRepository chargeRepository;
-    private final BookRepository bookRepository;
-    private final ChargeMapper chargeMapper;
-
     @Autowired
-    public ChargeSImpl(ChargeRepository chargeRepository, BookRepository bookRepository, ChargeMapper chargeMapper) {
-        this.chargeRepository = chargeRepository;
-        this.bookRepository = bookRepository;
-        this.chargeMapper = chargeMapper;
-    }
+    ChargeRepository chargeRepository;
+    @Autowired
+    BookRepository bookRepository;
+    @Autowired
+    ChargeMapper chargeMapper;
+
 
     @Override
     public Optional<ChargeDTO> getChargeInfoByBookId(int bookId) {
-        ChargeManagement chargeManagement= chargeRepository.findByBook_BookId(bookId)
+        ChargeManagement chargeManagement = chargeRepository.findByBook_BookId(bookId)
                 .orElseThrow(() -> new GlobalException.BookNotFoundException("book not existed"));
-        ChargeDTO chargeDTO=new ChargeDTO();
+        ChargeDTO chargeDTO = new ChargeDTO();
         chargeDTO.setCmId(chargeManagement.getCmId());
         chargeDTO.setChargeMoney(chargeManagement.getChargeMoney());
         chargeDTO.setBookId(bookId);
@@ -66,7 +63,7 @@ public class ChargeSImpl implements ChargeService {
                 chargeDTO.setChargeMoney(new java.math.BigDecimal("0.00"));
                 chargeDTO.setIsVipFree((byte) isCharge);
                 chargeMapper.insertChargeDetails(chargeDTO);
-            }else {
+            } else {
                 chargeMapper.updateVipChargeStatus(bookId, isCharge);
             }
         } else {

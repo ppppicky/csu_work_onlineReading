@@ -5,24 +5,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
 
 @Configuration
-public class CorsConfig {
+public class CorsConfig implements WebMvcConfigurer {
 
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true); // 允许携带 Cookie
-        config.setAllowedOrigins(Arrays.asList("http://localhost:8888")); // 允许前端域名（修改为你的 Vue 端口）
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setExposedHeaders(Arrays.asList("*"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-
-        return new CorsFilter(source);
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**") // 允许所有路径
+                .allowedOrigins("*") // 允许所有来源（或指定前端地址，如 "http://localhost:8000"）
+                .allowedMethods("GET", "POST", "PUT", "DELETE") // 允许的 HTTP 方法
+                .allowedHeaders("*") // 允许的请求头
+                .allowCredentials(false); // 是否允许携带凭证（如 cookies）
     }
 }

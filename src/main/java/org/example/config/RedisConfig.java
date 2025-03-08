@@ -1,5 +1,6 @@
 package org.example.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.nio.charset.StandardCharsets;
+
+@Slf4j
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
 
@@ -24,7 +29,10 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisTemplate<String, Integer> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         template.setKeySerializer(new StringRedisSerializer());
+     //   template.setValueSerializer(new StringRedisSerializer());
+
         template.setValueSerializer(new RedisSerializer<Integer>() {
+
             @Override
             public byte[] serialize(Integer value) {
                 return value == null ? null : value.toString().getBytes();
@@ -32,7 +40,8 @@ public class RedisConfig extends CachingConfigurerSupport {
 
             @Override
             public Integer deserialize(byte[] bytes) {
-                return bytes == null ? null : Integer.parseInt(new String(bytes));
+                //       String value = new String(bytes, StandardCharsets.UTF_8).trim();
+                return bytes == null ? null : Integer.parseInt(new String(bytes).trim());
             }
         });
         return template;

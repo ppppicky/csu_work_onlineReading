@@ -6,11 +6,14 @@ import org.example.dto.ChapterDTO;
 import org.example.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 public interface BookService {
@@ -34,13 +37,9 @@ public interface BookService {
 
     void createBook(BookChapterCombinationDTO bookInfoDTO) throws IOException;
 
+    @Async("ioThreadPool") // 使用自定义线程池
+    CompletableFuture<BookChapterCombinationDTO> parseEpubAsync(File bookFile);
+
     BookChapterCombinationDTO parseEpub(File tempFile) throws FileNotFoundException, IOException;
 
-//    public BigDecimal getTotalRevenue() {
-//        return dashboardMapper.calculateTotalRevenue();
-//    }
-
-//    public List<Map<String, Object>> getTopReadBooks() {
-//        return dashboardMapper.getTopReadBooks();
-//    }
 }

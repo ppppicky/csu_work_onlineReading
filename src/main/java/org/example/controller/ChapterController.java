@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class ChapterController {
     @Autowired
     ChapterService chapterService;
-/**
+
+    /**
      * @param chapterId
      * @return
      */
@@ -34,15 +35,14 @@ public class ChapterController {
     })
     @GetMapping("/{chapterId}")
     public String readChapter(@PathVariable Integer chapterId
-        //@RequestParam(defaultValue = "0") int page,
-       // @RequestParam(defaultValue = "1000") int pageSize
-                              ){
-        log.info("获取章节内容: {}",chapterId);
+                              //@RequestParam(defaultValue = "0") int page,
+                              // @RequestParam(defaultValue = "1000") int pageSize
+    ) {
+        log.info("获取章节内容: {}", chapterId);
         return chapterService.getChapterContent(chapterId);//分页
 
-       // return chapterService.getChapterContent(chapterId);//不分页
+        // return chapterService.getChapterContent(chapterId);//不分页
     }
-
 
 
     @ApiOperation(value = "更新章节内容", notes = "需要管理员权限")
@@ -54,14 +54,14 @@ public class ChapterController {
             @ApiResponse(code = 400, message = "非法参数"),
             @ApiResponse(code = 404, message = "未找到章节")
     })
-   // @PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{chapterId}")
     public ResponseEntity<String> updateChapterContent(
             @PathVariable Integer chapterId,
             @RequestBody String newContent) {
 
-        log.info("更新章节内容: {}",chapterId);
-        chapterService.updateChapterContent(chapterId,newContent);
+        log.info("更新章节内容: {}", chapterId);
+        chapterService.updateChapterContent(chapterId, newContent);
         return ResponseEntity.ok("update successfully");
     }
 
@@ -77,8 +77,8 @@ public class ChapterController {
     @PutMapping("/updatename/{chapterId}")
     public ResponseEntity<String> updateChapterName(
             @PathVariable Integer chapterId, @RequestBody String newName) {
-        log.info("更新章节名称: {}",chapterId);
-        chapterService.updateChapterName(chapterId,newName);
+        log.info("更新章节名称: {}", chapterId);
+        chapterService.updateChapterName(chapterId, newName);
         return ResponseEntity.ok("update successfully");
     }
 
@@ -92,15 +92,14 @@ public class ChapterController {
     @PostMapping("/create/{bookId}")
     public ResponseEntity<String> createChapter(
             @PathVariable Integer bookId, @RequestBody ChapterDTO chapterDTO) {
-        log.info("创建章节: {}",bookId);
+        log.info("创建章节: {}", bookId);
         try {
             chapterService.createChapter(bookId, chapterDTO);
             return ResponseEntity.ok().body("create chapter successfully");
-        }
-            catch (GlobalException.BookNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            } catch (GlobalException.InvalidPageException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (GlobalException.BookNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (GlobalException.InvalidPageException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

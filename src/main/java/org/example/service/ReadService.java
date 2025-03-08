@@ -1,6 +1,5 @@
 package org.example.service;
 
-import org.example.dto.ReadRecordDTO;
 import org.example.dto.ReadingSettingDTO;
 import org.example.entity.FontResource;
 import org.example.entity.Users;

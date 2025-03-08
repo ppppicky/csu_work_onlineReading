@@ -23,9 +23,9 @@ public class Book {
     @Column(length = 255)
     private String bookCover;
 
-    private String bookDesc;
+    private String bookDesc;//description
 
-    private Integer bookPage;//chapter_cnt
+    private Integer bookPage;//chapter_count
 
     private Byte isCharge;
 

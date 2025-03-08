@@ -30,15 +30,15 @@ public class ReadController {
     BackgroundService backgroundService;
 
 
-
     /**
      * 获取可用字体列表
+     *
      * @return 字体列表
      */
     @GetMapping("/font/list")
     @ApiOperation(value = "获取所有可用字体", notes = "返回系统支持的字体列表")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "成功获取字体列表",response = FontResource.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "成功获取字体列表", response = FontResource.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "请求错误")
     })
     public ResponseEntity<List<FontResource>> getAvailableFonts() {
@@ -54,6 +54,7 @@ public class ReadController {
 
     /**
      * 上传新字体
+     *
      * @param file
      * @return
      */
@@ -64,7 +65,7 @@ public class ReadController {
     })
     @PostMapping("/font/add")
     public ResponseEntity<String> addFont(
-            @ApiParam(value = "字体文件", required = true)@RequestParam("file") MultipartFile file){
+            @ApiParam(value = "字体文件", required = true) @RequestParam("file") MultipartFile file) {
         log.info("上传新字体");
         try {
             readService.addFont(file);
@@ -77,6 +78,7 @@ public class ReadController {
 
     /**
      * 上传背景图片/视频
+     *
      * @param file
      * @return BackgroundDTO
      */
@@ -100,6 +102,7 @@ public class ReadController {
 
     /**
      * 上传渐变背景
+     *
      * @param gradient 字符串gradient值
      * @return
      */
@@ -110,7 +113,7 @@ public class ReadController {
     })
     @PostMapping("/background/upload/gradient")
     public ResponseEntity<BackgroundDTO> uploadBackground(
-            @ApiParam(value = "渐变背景css字符串值", required = true)@RequestBody String gradient) {
+            @ApiParam(value = "渐变背景css字符串值", required = true) @RequestBody String gradient) {
         log.info("上传渐变背景");
         try {
             BackgroundDTO preview = backgroundService.uploadTemporary(gradient);
@@ -123,6 +126,7 @@ public class ReadController {
 
     /**
      * 确认背景保存
+     *
      * @param tempId 背景tempId
      * @param userId
      * @return
@@ -130,11 +134,11 @@ public class ReadController {
     @ApiOperation("确认背景保存")
     @PostMapping("/background/confirm")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "背景保存成功",response = String.class),
+            @ApiResponse(code = 200, message = "背景保存成功", response = String.class),
             @ApiResponse(code = 400, message = "操作失败")
     })
     public ResponseEntity<String> confirmBackground(
-            @ApiParam(value = "临时背景ID", required = true)@RequestParam("tempId") String tempId,
+            @ApiParam(value = "临时背景ID", required = true) @RequestParam("tempId") String tempId,
             @ApiParam(value = "用户ID", required = true) @RequestParam("userId") Integer userId) {
         log.info("确认背景保存");
         try {
@@ -147,28 +151,30 @@ public class ReadController {
     }
 
     /**
-     *获取用户所有背景
+     * 获取用户所有背景
+     *
      * @param user
      * @return
      */
     @ApiOperation(value = "获取指定用户所有背景", notes = "获取指定用户所有背景")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "获取成功",response = List.class),
+            @ApiResponse(code = 200, message = "获取成功", response = List.class),
             @ApiResponse(code = 400, message = "操作失败")
     })
     @GetMapping("/background/list/{userId}")
-    public ResponseEntity<List<BackgroundDTO>> userBackgroundsList(@AuthenticationPrincipal Users user) {
+    public ResponseEntity<List<String>> userBackgroundsList(@AuthenticationPrincipal Users user) {
         log.info("获取用户所有背景");
         try {
-           List<BackgroundDTO>  backgroundDTOS= backgroundService.getUserBackgrounds(user);
-            return ResponseEntity.ok(backgroundDTOS);
-        }catch (Exception e){
+            return ResponseEntity.ok(backgroundService.getUserBackgroundsUrl(user));
+        } catch (Exception e) {
+            log.error("获取用户所有背景失败");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     /**
      * 获取指定背景
+     *
      * @param backgroundId
      * @return
      */
@@ -178,19 +184,20 @@ public class ReadController {
             @ApiResponse(code = 400, message = "获取失败")
     })
     @GetMapping("/background/{backgroundId}")
-    public ResponseEntity<BackgroundDTO> getBackground(@PathVariable Integer backgroundId) {
+    public ResponseEntity<String> getBackground(@PathVariable Integer backgroundId) {
         log.info("获取指定背景");
         try {
-            BackgroundDTO backgroundDTO = backgroundService.getBackground(backgroundId);
-            return ResponseEntity.ok(backgroundDTO);
+
+            return ResponseEntity.ok(backgroundService.getBackgroundUrl(backgroundId));
         } catch (Exception e) {
-            log.info(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     /**
      * 获取用户阅读设置
+     *
      * @param user
      * @return
      */
@@ -207,26 +214,27 @@ public class ReadController {
             ReadingSettingDTO settingDTO = readService.getUserSettings(user);
 
             return ResponseEntity.ok(settingDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
     /**
      * 保存用户阅读设置
+     *
      * @param userId
      * @param settingDTO
      * @return
      */
     @ApiOperation("保存用户阅读设置")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "保存设置成功",response = String.class),
+            @ApiResponse(code = 200, message = "保存设置成功", response = String.class),
             @ApiResponse(code = 400, message = "保存失败")
     })
     @PostMapping("/setting")
     public ResponseEntity<String> saveUserSettings(
             //@AuthenticationPrincipal Users user,
-            @RequestParam("userId")Integer userId,
+            @RequestParam("userId") Integer userId,
             @Valid @RequestBody ReadingSettingDTO settingDTO) {
         log.info("保存用户阅读设置");
         try {
@@ -236,7 +244,5 @@ public class ReadController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
-
 }

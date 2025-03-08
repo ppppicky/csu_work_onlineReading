@@ -10,8 +10,8 @@ import org.example.dto.BookInfoDTO;
 import org.example.dto.ChapterDTO;
 import org.example.entity.Book;
 import org.example.entity.BookType;
-import org.example.mapper.BookMapper;
 import org.example.repository.*;
+import org.example.service.BookIndexService;
 import org.example.service.BookService;
 import org.example.service.ChapterService;
 import org.example.util.EpubDealer;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +32,16 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class BookSImpl implements BookService {
+@Autowired
+    BookIndexService indexService;
+    @Autowired
+    ChapterService chapterService;
 
     @Autowired
     BookRepository bookRepository;
@@ -46,20 +51,17 @@ public class BookSImpl implements BookService {
     ChapterRepo chapterRepo;
     @Autowired
     ReadRepository readRepository;
-    ////
-    @Autowired
-    ChapterService chapterService;
 
     @Autowired
     StarBookRepository starBookRepository;
     @Autowired
     BoughtBookRepository boughtBookRepository;
+
     @Autowired
     EpubDealer epubDealer;
     private final String STATICDIR = System.getProperty("user.dir") + "/src/main/resources/static";
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+
 
 
     @Override
@@ -85,8 +87,6 @@ public class BookSImpl implements BookService {
         } else {
             books = bookRepository.findByBookNameContainingOrAuthorContaining(keyword, keyword, pageable);
         }
-
-        // **转换 `Book` 为 `BookInfoDTO`**
         return books.map(this::convertToDTO);
     }
 
@@ -175,25 +175,9 @@ public class BookSImpl implements BookService {
             chapterRepo.deleteByBookId(bookId);
             bookRepository.delete(book);
         } catch (Exception e) {
-            log.info("-------" + e.getLocalizedMessage());
+            log.error("删除书籍失败：{}" , e.getMessage());
         }
     }
-
-//    /**
-//     * @param bookTypeId
-//     * @return
-//     */
-//    @Override
-//    public List<Book> getBooksByType(int bookTypeId) {
-//        return bookMapper.getBooksByCategory(bookTypeId).stream().map(map -> {
-//            Book book = new Book();
-//            book.setBookCover((String) map.get("BookCover"));
-//            book.setAuthor((String) map.get("Author"));
-//            book.setBookId((Integer) map.get("BookId"));
-//            book.setBookName((String) map.get("BookName"));
-//            return book;
-//        }).collect(Collectors.toList());
-//    }
 
 
     /**
@@ -286,9 +270,21 @@ public class BookSImpl implements BookService {
         for (ChapterDTO chapterDTO : combinationDTO.getChapters()) {
             chapterService.createChapter(book.getBookId(), chapterDTO);
         }
+        indexService.createIndex(book);
 
     }
-
+    @Override
+    @Async("ioThreadPool") // 使用自定义线程池
+    public CompletableFuture<BookChapterCombinationDTO> parseEpubAsync(File bookFile) {
+        try {
+            // 调用实际的解析逻辑
+            BookChapterCombinationDTO result = parseEpub(bookFile);
+            return CompletableFuture.completedFuture(result);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return CompletableFuture.completedFuture(null);
+        }
+    }
 
     @Override
     public BookChapterCombinationDTO parseEpub(File bookFile) throws IOException {
@@ -324,7 +320,6 @@ public class BookSImpl implements BookService {
                 break;
             }
         }
-        log.info("1111111111");
 
        // newBook.setBookCover(bookCover);
         newBook.setAuthor(author);
@@ -333,7 +328,6 @@ public class BookSImpl implements BookService {
         newBook.setBookPage(epubDealer.countChapters(epubBook));
         newBook.setCreateTime(epubDealer.extractBookCreationDate(epubBook));
       //  log.info(newBook.toString());
-        // newBook.setUpdateTime(LocalDateTime.now());
         InputStream is = new FileInputStream(bookFile);
         List<ChapterDTO> chapters =
                 epubDealer.parseChapters(0, is).stream()

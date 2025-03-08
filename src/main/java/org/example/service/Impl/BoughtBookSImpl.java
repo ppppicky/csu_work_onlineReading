@@ -1,5 +1,6 @@
 package org.example.service.Impl;
 
+
 import org.example.entity.Book;
 import org.example.entity.BoughtBook;
 import org.example.repository.BookRepository;
@@ -14,18 +15,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class BoughtBookSImpl implements BoughtBookService {
-
-    private final BoughtBookRepository boughtBookRepository;
-    private final BookRepository bookRepository;
-
     @Autowired
-    public BoughtBookSImpl(BoughtBookRepository boughtBookRepository, BookRepository bookRepository) {
-        this.boughtBookRepository = boughtBookRepository;
-        this.bookRepository = bookRepository;
-    }
-
+    BoughtBookRepository boughtBookRepository;
+    @Autowired
+    BookRepository bookRepository;
     /**
-     * 根据用户 ID 查询已购书籍
+     *  根据用户 ID 查询已购书籍
+     * @param userId
+     * @return
      */
     @Override
     public List<Book> getBoughtBooksByUserId(Integer userId) {
@@ -41,8 +38,12 @@ public class BoughtBookSImpl implements BoughtBookService {
         return bookRepository.findByBookIdIn(bookIds);
     }
 
+
     /**
      * 判断用户是否已购买指定书籍
+     * @param userId
+     * @param bookId
+     * @return
      */
     @Override
     public boolean hasUserBoughtBook(Integer userId, Integer bookId) {

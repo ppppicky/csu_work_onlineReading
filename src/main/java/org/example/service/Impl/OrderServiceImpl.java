@@ -28,22 +28,18 @@ import java.util.*;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final OrdersRepository ordersRepository;
-    private final UserRepository userRepository;
-    private final BoughtBookRepository boughtBookRepository;
+   @Autowired
+   OrdersRepository ordersRepository;
+   @Autowired
+   UserRepository userRepository;
+   @Autowired
+   BoughtBookRepository boughtBookRepository;
 
     @Resource
     private AliPayUtil aliPayUtil; // 负责调用支付宝关闭订单的工具类
 
     @Resource
     private AliPayConfig aliPayConfig; // 读取支付宝配置
-
-    @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository, UserRepository userRepository, BoughtBookRepository boughtBookRepository) {
-        this.ordersRepository = ordersRepository;
-        this.userRepository = userRepository;
-        this.boughtBookRepository = boughtBookRepository;
-    }
 
     @Override
     public List<Orders> queryOrders(OrderQueryDTO dto) {
