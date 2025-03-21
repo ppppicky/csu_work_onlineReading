@@ -23,13 +23,14 @@ public class ForbiddenSImpl implements ForbiddenService {
     @Autowired
     ContentFilter contentFilter;
 
+    /**
+     * 添加违禁词
+     *
+     * @param word
+     * @return
+     */
     public ForbiddenWord addWord(String word) {
-//        ForbiddenWord forbiddenWord = new ForbiddenWord();
-//
-//        forbiddenWord.setWord(word);
-//        ForbiddenWord saved = forbiddenWordRepo.save(forbiddenWord);
-//        contentFilter.loadDbWords(); // 立即刷新
-//        return saved;
+
         ForbiddenWord forbiddenWord = new ForbiddenWord();
         forbiddenWord.setWord(word);
         ForbiddenWord saved = forbiddenWordRepo.save(forbiddenWord);
@@ -52,8 +53,11 @@ public class ForbiddenSImpl implements ForbiddenService {
                 forbiddenWordRepo.delete(forbiddenWord);
 
                 // 更新内存数据
+                // 创建一个CopyOnWriteArrayList，其内容为dbWords当前存储的内容
                 List<String> updatedDbWords = new CopyOnWriteArrayList<>(contentFilter.dbWords.get());
+                // 从更新后的列表中移除指定的违禁词
                 updatedDbWords.remove(word);
+                // 将更新后的列表设置回dbWords中
                 contentFilter.dbWords.set(updatedDbWords);
                 contentFilter.dbRegexPattern.set(updatedDbWords.stream()
                         .map(Pattern::quote)
@@ -65,14 +69,7 @@ public class ForbiddenSImpl implements ForbiddenService {
             log.error("删除禁用词失败: {}", e.getMessage());
             throw new RuntimeException(e);
         }
-//        try {
-//            log.info(word);
-//            forbiddenWordRepo.delete(forbiddenWordRepo.findByWord(word).get());
-//            contentFilter.loadDbWords();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e.getLocalizedMessage());
-//        }
+
     }
 
 

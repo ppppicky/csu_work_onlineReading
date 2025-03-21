@@ -39,9 +39,9 @@ public class ChapterController {
                               // @RequestParam(defaultValue = "1000") int pageSize
     ) {
         log.info("获取章节内容: {}", chapterId);
-        return chapterService.getChapterContent(chapterId);//分页
+       // return chapterService.getChapterContent(chapterId);//分页
 
-        // return chapterService.getChapterContent(chapterId);//不分页
+        return chapterService.getChapterContent(chapterId);//不分页
     }
 
 
@@ -54,7 +54,7 @@ public class ChapterController {
             @ApiResponse(code = 400, message = "非法参数"),
             @ApiResponse(code = 404, message = "未找到章节")
     })
-    // @PreAuthorize("hasRole('ADMIN')")
+
     @PutMapping("/update/{chapterId}")
     public ResponseEntity<String> updateChapterContent(
             @PathVariable Integer chapterId,
@@ -64,6 +64,7 @@ public class ChapterController {
         chapterService.updateChapterContent(chapterId, newContent);
         return ResponseEntity.ok("update successfully");
     }
+
 
     @ApiOperation(value = "更新章节名称", notes = "需要管理员权限")
     @ApiImplicitParams({

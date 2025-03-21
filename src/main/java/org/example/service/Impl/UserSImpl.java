@@ -2,7 +2,6 @@ package org.example.service.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.Users;
-import org.example.mapper.UserMapper;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
 import org.mindrot.jbcrypt.BCrypt;

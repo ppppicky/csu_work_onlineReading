@@ -21,9 +21,8 @@ public class BookTypeSImpl implements BookTypeService {
     public void addType(String typeName) {
 
        if( bookTypeRepository.findByBookTypeName(typeName).isPresent()){
-           throw new RuntimeException("booktype existed");
+           log.error("booktype existed");
        }
-
         BookType bookType=new BookType();
        bookType.setBookTypeName(typeName);
        //log.info(bookType.toString());

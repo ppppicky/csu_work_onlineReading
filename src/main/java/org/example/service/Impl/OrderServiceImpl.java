@@ -13,16 +13,21 @@ import org.example.repository.UserRepository;
 import org.example.service.OrderService;
 import org.example.util.AliPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.Executor;
 
 @Slf4j
 @Service
@@ -34,6 +39,11 @@ public class OrderServiceImpl implements OrderService {
    UserRepository userRepository;
    @Autowired
    BoughtBookRepository boughtBookRepository;
+
+    @Autowired
+    @Qualifier("orderThreadPool")
+    private Executor orderExecutor;
+
 
     @Resource
     private AliPayUtil aliPayUtil; // 负责调用支付宝关闭订单的工具类
@@ -101,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class) //添加事务注解
     public ResponseEntity<String> payWithBalance(String orderId) {
         Optional<Orders> optionalOrder = ordersRepository.findByOrderId(orderId);
         if (!optionalOrder.isPresent()) {
@@ -129,6 +140,12 @@ public class OrderServiceImpl implements OrderService {
 
         // 扣除余额
         user.setUserCredit(userBalance.subtract(orderAmount));
+        //通过版本号实现乐观锁防止并发扣减冲突
+        try {
+            userRepository.save(user); // JPA会自动更新version，若冲突抛出OptimisticLockException
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new RuntimeException("并发操作冲突，请重试");
+        }
 
         // 处理不同的订单类型
         if (order.getName().equals("vip_year") || order.getName().equals("vip_month") || order.getName().equals("vip_season")) {
@@ -210,6 +227,7 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 定时关闭超时订单（每 10 分钟执行一次）
      */
+    @Async("orderThreadPool")
     @Scheduled(fixedRate = 600000) // 10 分钟执行一次
     public void autoCancelOrders() {
         log.info("========= 开始检查超时未支付订单 =========");
@@ -218,22 +236,24 @@ public class OrderServiceImpl implements OrderService {
 
         // 查询所有超时未支付的订单
         List<Orders> expiredOrders = ordersRepository.findByStateAndCreateTimeBefore("PENDING", expiryTime);
-
         for (Orders order : expiredOrders) {
-            try {
-                // 调用支付宝 API 关闭订单
-                boolean isClosed = aliPayUtil.closeOrder(order.getOrderId(), aliPayConfig);
-
-                // 更新数据库订单状态
-                order.setState("CANCELLED");
-                ordersRepository.save(order);
-                log.info("订单 {} 已自动关闭", order.getOrderId());
-
-            } catch (AlipayApiException e) {
-                log.error("关闭支付宝订单失败: {}", order.getOrderId(), e);
-            }
+            orderExecutor.execute(() -> {
+                try {
+                    log.info("order______"+orderExecutor.toString());
+                    log.info("开始关闭订单 {}", order.getOrderId());
+                    boolean isClosed = aliPayUtil.closeOrder(order.getOrderId(), aliPayConfig);
+                    if (isClosed) {
+                        order.setState("CANCELLED");
+                        ordersRepository.save(order);
+                        log.info("订单 {} 已自动关闭", order.getOrderId());
+                    } else {
+                        log.warn("订单 {} 关闭失败，支付宝未返回成功", order.getOrderId());
+                    }
+                } catch (AlipayApiException e) {
+                    log.error("关闭支付宝订单失败: {}", order.getOrderId(), e);
+                }
+            });
         }
-
         log.info("========= 超时未支付订单检查完成 =========");
     }
 }

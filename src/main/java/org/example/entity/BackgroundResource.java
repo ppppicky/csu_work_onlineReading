@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 // 背景资源实体
 @Entity
-@Table(name = "background_resource")
 @Data
 public class BackgroundResource {
     @Id
@@ -21,9 +20,9 @@ public class BackgroundResource {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BackgroundType resourceType; // IMAGE/GIF/VIDEO/ GRADIENT
+    private BackgroundType resourceType; // IMAGE/GIF/VIDEO/GRADIENT
 
-   @Column(nullable = false) // 修改字段名和数据库列名
+   @Column(nullable = false)
    private String storageKey; // 存储 MinIO 对象键（如 "permanent/uuid.jpg"）
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

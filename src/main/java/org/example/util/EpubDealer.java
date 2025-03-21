@@ -143,13 +143,13 @@ public class EpubDealer {
             String htmlContent = new String(res.getData(), StandardCharsets.UTF_8);
             Document doc = Jsoup.parse(htmlContent);
 
-            // **优先查找 h1 标签**
+            // 优先查找 h1 标签
             Element h1 = doc.selectFirst("h1");
             if (h1 != null) {
                 return h1.text().trim();
             }
 
-            // **备用：获取 title**
+            // 备用：获取 title
             Element title = doc.selectFirst("title");
             if (title != null) {
                 return title.text().trim();
@@ -188,7 +188,7 @@ public class EpubDealer {
     }
 
     public String extractBookDescription(Book epubBook) {
-        // 1. **尝试从元数据中获取描述**
+        // 1. 尝试从元数据中获取描述
         String description = epubBook.getMetadata().getDescriptions().stream()
                 .findFirst()
                 .orElse("");
@@ -198,14 +198,14 @@ public class EpubDealer {
             return description;
         }
 
-        // 2. **如果元数据中没有描述，尝试从正文内容中提取**
+        // 2. 如果元数据中没有描述，尝试从正文内容中提取
         for (Resource resource : epubBook.getResources().getAll()) {
             if (resource.getMediaType().toString().contains("html")) {
                 try {
                     String content = new String(resource.getData(), StandardCharsets.UTF_8);
                     Document doc = Jsoup.parse(content);
 
-                    // **查找 p 标签中的第一段内容**
+                    // 查找p标签中的第一段内容
                     Element firstParagraph = doc.selectFirst("p");
                     if (firstParagraph != null) {
                         String text = firstParagraph.text().trim();
@@ -261,8 +261,6 @@ public class EpubDealer {
         if (dateTime == null && dateStr.matches("\\d{4}")) {
             dateTime = LocalDateTime.of(Integer.parseInt(dateStr), 1, 1, 0, 0);
         }
-
         return dateTime;
     }
-
 }

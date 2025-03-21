@@ -4,9 +4,7 @@ import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
-// src/main/java/org/example/entity/Advert.java
 @Data
 @Document(indexName = "advert")
 public class Advert {

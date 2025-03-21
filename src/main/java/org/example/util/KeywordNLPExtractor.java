@@ -23,11 +23,16 @@ public class KeywordNLPExtractor {
     private static final List<String> EXCLUDED_POS_TAGS = Arrays.asList(
             "nr",  // 人名
             "m",   // 数词（包含序数词）
-            "f",    // 方位词
-            "mq",
-            "p"
+            "f",   // 方位词
+            "mq",  // 数量词
+            "p"    // 介词
     );
 
+    /**
+     * 提取文本中的关键词
+     * @param text
+     * @return 按词频降序排列的关键词列表（最多返回配置的totals个）
+     */
     public List<String> extractKeywords(String text) {
       //  log.info("nlp         " + text);
         if (text == null || text.isEmpty()) {

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.entity.ForbiddenWord;
 import org.example.repository.ForbiddenWordRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -42,11 +43,11 @@ public class ContentFilter {
         loadDbWords();
     }
 
-//    // 定时任务，每分钟执行一次，用于重新加载数据库中的禁用词库
-//    @Scheduled(fixedRate = 60000) // 10 分钟执行一次
-//    public void scheduledReloadDbWords() {
-//        loadDbWords();
-//    }
+    // 定时任务，每分钟执行一次，用于重新加载数据库中的禁用词库
+    @Scheduled(fixedRate = 60000) // 10 分钟执行一次
+    public void scheduledReloadDbWords() {
+        loadDbWords();
+    }
 
     /**
      * 从文件中加载禁用词

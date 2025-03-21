@@ -40,7 +40,7 @@ public class ChapterSImpl implements ChapterService {
     @Override
     public PaginatedContent getChapterContent(Integer chapterId, int pageSize) {
         BookChapter chapter = chapterRepo.findById(chapterId)
-                .orElseThrow(() -> new RuntimeException("章节不存在"));
+                .orElseThrow(() -> new GlobalException.FontNotFoundException("章节不存在"));
         List<String> pages = splitContentToPages(contentFilter.filterFromDB(chapter.getContent()), pageSize);
         return new PaginatedContent(pages, pages.size());
     }

@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface BookIndexService {
     public void createIndex(Book book);
+
     public List<String> getKeywords(Integer bookId);
 }

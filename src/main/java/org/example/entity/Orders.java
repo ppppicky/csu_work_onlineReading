@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,8 +14,9 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 订单ID
 
+    @ApiModelProperty("订单名称 (\"recharge\"充值;\"vip_year\"年会员;\"vip_month\"月会员;\"vip_season\"季会员;\"bought_book\"购书)")
     @Column(nullable = false, length = 255)
-    private String name; // 订单名称 ("recharge" → 充值; "vip_year" → 年会员; "vip_month" → 月会员; "vip_season" → 季会员; "bought_book" → 购书)
+    private String name;
 
     @Column(nullable = false, unique = true, length = 64)
     private String orderId; // 系统生成的订单号

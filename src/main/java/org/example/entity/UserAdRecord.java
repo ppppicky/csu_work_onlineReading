@@ -20,7 +20,7 @@ public class UserAdRecord implements Serializable {
     private LocalDateTime watchTime;
 
     }
-    //  private Integer remainingViews; // 当日剩余观看次数（冗余字段，便于快速查询）
+
 
 
 

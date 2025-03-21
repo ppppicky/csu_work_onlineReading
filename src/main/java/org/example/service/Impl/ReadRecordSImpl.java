@@ -34,9 +34,9 @@ public class ReadRecordSImpl implements ReadRecordService {
     @Override
     public List<ReadRecordDTO> getAllRecordsByUserId(int userId) {
         Users users = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user not existed"));
+                .orElseThrow(() -> new GlobalException.UserNotFoundException("user not existed"));
         List<ReadRecord> readRecords = readRepository.findByUser(users)
-                .orElseThrow(() -> new IllegalArgumentException("book not been read yet"));
+                .orElseThrow(() -> new GlobalException.BookNotFoundException("book not been read yet"));
         List<ReadRecordDTO> recordDTOS = readRecords.stream().map((item) -> {
             ReadRecordDTO dto = new ReadRecordDTO();
             BeanUtils.copyProperties(item, dto);
@@ -51,6 +51,12 @@ public class ReadRecordSImpl implements ReadRecordService {
 
     }
 
+    /**
+     *
+     * @param userId
+     * @param bookId
+     * @return
+     */
     @Override
     public ReadRecordDTO getLastRecordByUserId(int userId, int bookId) {
         Users users = userRepository.findById(userId)

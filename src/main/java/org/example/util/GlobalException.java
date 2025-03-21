@@ -31,4 +31,21 @@ public class GlobalException {
             super(message);
         }
     }
+    public static class FontNotFoundException extends RuntimeException {
+
+        public FontNotFoundException(String message) {super(message);
+        }
+    }
+    public static class BackgroundNotFoundException extends RuntimeException {
+
+        public BackgroundNotFoundException(String message) {
+            super(message);
+        }
+    }
+    public static class ReadingSettingNotFoundException extends RuntimeException {
+
+        public ReadingSettingNotFoundException(String message) {
+            super(message);
+        }
+    }
 }

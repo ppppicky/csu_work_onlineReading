@@ -8,21 +8,20 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "users")
+
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    // @Column(nullable = false, length = 50)
     @Column(name = "userName")
     private String userName;
 
-    //@Column(nullable = false, length = 50)
+
     private String userPassword;
 
     private Byte userSex; // 1 male, 0 female
-    private Byte isVip; // 1 VIP, 0 non
+    private Byte isVip; // 1 VIP, 0 no
     private LocalDateTime vipTime;
 
     @Column(precision = 20, scale = 2)
@@ -33,5 +32,8 @@ public class Users {
 
     @Column(nullable = false)
     private Byte status = 1;  // 1 yes, 0 no
+
+    @Version
+    private Integer version;
 
 }

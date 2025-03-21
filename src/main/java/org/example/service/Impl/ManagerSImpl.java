@@ -1,5 +1,6 @@
 package org.example.service.Impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDTO;
 import org.example.entity.Manager;
 import org.example.entity.Users;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ManagerSImpl implements ManagerService {
 
     @Autowired
@@ -30,10 +32,10 @@ public class ManagerSImpl implements ManagerService {
 
     @Override
     public Manager login(String name, String password) {
-        Manager manager = (Manager) managerRepository.findByManagerName(name);
-       if(manager==null)throw  new RuntimeException("manager existed");
+        Manager manager = managerRepository.findByManagerName(name);
+        if (manager == null) log.error("manager existed");
         if (!BCrypt.checkpw(password, manager.getManagerPassword())) {
-            throw new RuntimeException("incorrect password");
+            log.error("incorrect password");
         }
         return manager;
     }

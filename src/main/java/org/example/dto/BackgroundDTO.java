@@ -7,7 +7,7 @@ import org.example.entity.BackgroundType;
 public class BackgroundDTO {
     private String id;
 
-    private BackgroundType resourceType; // IMAGE/GIF/VIDEO
+    private BackgroundType resourceType; // IMAGE/GIF/VIDEO/GRADIENT
 
     private String  storageKey;
 

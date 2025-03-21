@@ -6,16 +6,16 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "bought_book")
 public class BoughtBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer boughtId; // 购买记录ID
+    private Integer boughtId;
 
     @Column(nullable = false)
-    private Integer userId; // 用户ID
+    private Integer userId;
 
     @Column(nullable = false)
-    private Integer bookId; // 书籍ID
+    private Integer bookId;
+
     private LocalDateTime boughtTime;
 }

@@ -2,6 +2,7 @@ package org.example.controller;
 
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.ResourceNotFoundException;
 import org.example.dto.BackgroundDTO;
 import org.example.dto.ReadingSettingDTO;
 import org.example.entity.FontResource;
@@ -17,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/read")
@@ -39,7 +43,7 @@ public class ReadController {
     @ApiOperation(value = "获取所有可用字体", notes = "返回系统支持的字体列表")
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功获取字体列表", response = FontResource.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "请求错误")
+            @ApiResponse(code = 500, message = "服务器内部错误")
     })
     public ResponseEntity<List<FontResource>> getAvailableFonts() {
         log.info("获取所有可用字体");
@@ -47,7 +51,8 @@ public class ReadController {
             List<FontResource> list = readService.getAvailableFonts();
             return ResponseEntity.ok(list);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            log.error("[字体管理] 获取字体列表失败 | Error={}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
     }
@@ -58,12 +63,13 @@ public class ReadController {
      * @param file
      * @return
      */
+    @PostMapping("/font/add")
     @ApiOperation(value = "上传新字体", notes = "用户上传新的字体文件")
     @ApiResponses({
             @ApiResponse(code = 200, message = "字体上传成功"),
-            @ApiResponse(code = 400, message = "上传失败")
+            @ApiResponse(code = 400, message = "无效文件格式"),
+            @ApiResponse(code = 500, message = "上传失败")
     })
-    @PostMapping("/font/add")
     public ResponseEntity<String> addFont(
             @ApiParam(value = "字体文件", required = true) @RequestParam("file") MultipartFile file) {
         log.info("上传新字体");
@@ -71,9 +77,8 @@ public class ReadController {
             readService.addFont(file);
             return ResponseEntity.ok("add font successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
     }
 
     /**
@@ -86,17 +91,22 @@ public class ReadController {
     @PostMapping("/background/upload")
     @ApiResponses({
             @ApiResponse(code = 200, message = "上传成功", response = BackgroundDTO.class),
-            @ApiResponse(code = 400, message = "上传失败")
+            @ApiResponse(code = 400, message = "无效文件类型"),
+            @ApiResponse(code = 504, message = "处理超时")
     })
     public ResponseEntity<BackgroundDTO> uploadBackground(
-            @ApiParam(value = "背景图片/视频文件", required = true) @RequestParam("file") MultipartFile file) {
-        log.info("上传背景图片/视频");
+            @ApiParam(value = "背景文件", required = true) @RequestParam("file") MultipartFile file) {
+        log.info("上传背景文件: {}", file.getOriginalFilename());
         try {
-            BackgroundDTO preview = backgroundService.uploadTemporary(file);
+            CompletableFuture<BackgroundDTO> future = backgroundService.uploadTemporary(file);
+            BackgroundDTO preview = future.get(25, TimeUnit.SECONDS); // 限制最多等待25秒
             return ResponseEntity.ok(preview);
+        } catch (TimeoutException e) {
+            log.warn("[背景管理] 上传超时 | 文件名={}", file.getOriginalFilename());
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).build();
         } catch (Exception e) {
-            log.info(e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            log.error("[背景管理]上传失败 : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -106,21 +116,22 @@ public class ReadController {
      * @param gradient 字符串gradient值
      * @return
      */
+    @PostMapping("/background/upload/gradient")
     @ApiOperation("上传渐变背景")
     @ApiResponses({
             @ApiResponse(code = 200, message = "上传成功", response = BackgroundDTO.class),
-            @ApiResponse(code = 400, message = "上传失败")
+            @ApiResponse(code = 400, message = "无效渐变参数")
     })
-    @PostMapping("/background/upload/gradient")
     public ResponseEntity<BackgroundDTO> uploadBackground(
             @ApiParam(value = "渐变背景css字符串值", required = true) @RequestBody String gradient) {
         log.info("上传渐变背景");
         try {
-            BackgroundDTO preview = backgroundService.uploadTemporary(gradient);
+            CompletableFuture<BackgroundDTO> future = backgroundService.uploadTemporary(gradient);
+            BackgroundDTO preview = future.get(25, TimeUnit.SECONDS); // 限制最多等待25秒
             return ResponseEntity.ok(preview);
         } catch (Exception e) {
-            log.info(e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            log.error("上传失败: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -135,18 +146,25 @@ public class ReadController {
     @PostMapping("/background/confirm")
     @ApiResponses({
             @ApiResponse(code = 200, message = "背景保存成功", response = String.class),
-            @ApiResponse(code = 400, message = "操作失败")
+            @ApiResponse(code = 400, message = "操作失败"),
+            @ApiResponse(code = 409, message = "资源已过期")
     })
     public ResponseEntity<String> confirmBackground(
             @ApiParam(value = "临时背景ID", required = true) @RequestParam("tempId") String tempId,
             @ApiParam(value = "用户ID", required = true) @RequestParam("userId") Integer userId) {
-        log.info("确认背景保存");
+        log.info("确认背景: tempId={}, userId={}", tempId, userId);
+
         try {
-            backgroundService.confirmSave(tempId, userId);
-            return ResponseEntity.ok().build();
+            String result = backgroundService.confirmSave(tempId, userId)
+                    .get(10, TimeUnit.SECONDS);
+            return ResponseEntity.ok(result);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (TimeoutException e) {
+            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).build();
         } catch (Exception e) {
-            log.info(e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            log.error("[背景管理] 保存失败 | TempID={}, Error={}", tempId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -162,13 +180,14 @@ public class ReadController {
             @ApiResponse(code = 400, message = "操作失败")
     })
     @GetMapping("/background/list/{userId}")
-    public ResponseEntity<List<String>> userBackgroundsList(@AuthenticationPrincipal Users user) {
+    public ResponseEntity<List<String>> userBackgroundsList(
+            @AuthenticationPrincipal Users user) {
         log.info("获取用户所有背景");
         try {
             return ResponseEntity.ok(backgroundService.getUserBackgroundsUrl(user));
         } catch (Exception e) {
-            log.error("获取用户所有背景失败");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            log.error("[背景管理] 查询失败 | 用户={}, Error={}", user.getUserId(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -202,7 +221,7 @@ public class ReadController {
      * @return
      */
     @ApiOperation("获取用户阅读设置")
-    @GetMapping("/setting/{userId}")
+    @GetMapping("/setting")
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功获取设置", response = ReadingSettingDTO.class),
             @ApiResponse(code = 400, message = "获取失败")
@@ -212,10 +231,12 @@ public class ReadController {
         log.info("获取用户阅读设置");
         try {
             ReadingSettingDTO settingDTO = readService.getUserSettings(user);
-
             return ResponseEntity.ok(settingDTO);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            log.error("[阅读设置] 获取失败 | 用户={}, Error={}", user.getUserId(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -228,21 +249,20 @@ public class ReadController {
      */
     @ApiOperation("保存用户阅读设置")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "保存设置成功", response = String.class),
+            @ApiResponse(code = 200, message = "保存设置成功"),
             @ApiResponse(code = 400, message = "保存失败")
     })
     @PostMapping("/setting")
     public ResponseEntity<String> saveUserSettings(
-            //@AuthenticationPrincipal Users user,
-            @RequestParam("userId") Integer userId,
+           // @AuthenticationPrincipal Users user,
+              @RequestParam("userId") Integer userId,
             @Valid @RequestBody ReadingSettingDTO settingDTO) {
         log.info("保存用户阅读设置");
         try {
             readService.updateUserSetting(userId, settingDTO);
             return ResponseEntity.ok("reading setting successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

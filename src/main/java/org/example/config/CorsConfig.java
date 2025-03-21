@@ -14,10 +14,11 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // 允许所有路径
-                .allowedOrigins("*") // 允许所有来源（或指定前端地址，如 "http://localhost:8000"）
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // 允许的 HTTP 方法
-                .allowedHeaders("*") // 允许的请求头
-                .allowCredentials(false); // 是否允许携带凭证（如 cookies）
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true)
+                .maxAge(3600)
+                .allowedHeaders("*");
     }
 }

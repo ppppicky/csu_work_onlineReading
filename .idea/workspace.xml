@@ -5,31 +5,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0b4daf5-673c-419b-8259-03c2bf49e712" name="更改" comment="新增es+minoi管理广告">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/config/ThreadPoolConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/RankController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/RankService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/task/RankingUpdateTask.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sensitive/广告.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sensitive/色情类.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/common/StandardResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/fonts/FZYINGXUEJW--GB1-0.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Listener/OnlineUserListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Listener/OnlineUserListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/RedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/RedisConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/BookController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ForbiddenWordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ForbiddenWordController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/ThreadPoolConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/ThreadPoolConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/config/WebMvcConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/AliPayController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AliPayController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ChapterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ChapterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/DashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ManagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/RankController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/ReadController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/BackgroundDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/BackgroundDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/BookReadCountDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/BookReadCountDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/ChapterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/ChapterDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/CoverTempDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/CoverTempDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/PurchaseStatsDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/ReadingSettingDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/ReadingSettingDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/SetChargeStatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/SetChargeStatusDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/UserBehaviorStatsDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Advert.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Advert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/BackgroundResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/BackgroundResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Book.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/BookType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/BookType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/BoughtBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/BoughtBook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ChargeManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ChargeManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Orders.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Orders.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadingSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ReadingSetting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/StarBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/StarBook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/UserAdRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/UserAdRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/Users.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/VipPrice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/VipPrice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/filter/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/filter/JwtFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BackgroundService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BackgroundService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BookIndexService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BookIndexService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BookService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/BoughtBookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/BoughtBookService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ChapterService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ChapterService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ChargeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ChargeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/DashboardService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BackgroundSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BackgroundSImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookTypeSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/BookTypeSImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ChapterSImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/DashboardSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/DashboardSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/DashboardSImpl.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ForbiddenSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ForbiddenSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ManagerSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ManagerSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadRecordSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadRecordSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/ReadSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/UserSImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/Impl/UserSImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/RankService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/RankService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ReadRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ReadRecordService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/AdRecordRedisCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/AdRecordRedisCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/VipPriceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/VipPriceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/AdsMinioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/AdsMinioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/BackgroundDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/BackgroundDealer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/BookCoverTempDealer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/ContentFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/ContentFilter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/EpubDealer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/GlobalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/GlobalException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/KeywordNLPExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/util/KeywordNLPExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/sensitive/色情类.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/sensitive/色情类.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +128,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master-8&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Idea_workspace/untitled/src/main/java/org/example/filter&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Idea_workspace/untitled/src/main/java/org/example/util&quot;,
     &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
@@ -92,11 +138,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\util" />
+      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\controller" />
       <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\filter" />
       <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\config" />
-      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\controller" />
-      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\util" />
-      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\service\Impl" />
+      <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\Listener" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Idea_workspace\untitled\src\main\java\org\example\config" />
@@ -371,7 +417,31 @@
       <option name="project" value="LOCAL" />
       <updated>1741939005915</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="新增es+minoi管理广告">
+      <option name="closed" value="true" />
+      <created>1742396418027</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1742396418027</updated>
+    </task>
+    <task id="LOCAL-00030" summary="新增es+minoi管理广告">
+      <option name="closed" value="true" />
+      <created>1742396471432</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1742396471432</updated>
+    </task>
+    <task id="LOCAL-00031" summary="新增es+minoi管理广告">
+      <option name="closed" value="true" />
+      <created>1742396485905</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1742396485905</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

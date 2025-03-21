@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 // 用户个性化设置实体
@@ -25,9 +26,9 @@ public class ReadingSetting {
     private Integer fontSize = 16;
 
     // 背景设置
+    // BackgroundType:SOLID_COLOR, IMAGE, GRADIENT, GIF, VIDEO
     @Enumerated(EnumType.STRING)
-    private BackgroundType backgroundType = BackgroundType.SOLID_COLOR;// BackgroundType:SOLID_COLOR, IMAGE, GRADIENT, GIF, VIDEO
-
+    private BackgroundType backgroundType = BackgroundType.SOLID_COLOR;
     private String solidColor = "#FFFFFF";
 
     @ManyToOne
@@ -36,6 +37,7 @@ public class ReadingSetting {
 
     private Double lineSpacing = 1.5;
 
+    @Pattern(regexp = "day|night|auto|eye-friendly", message = "主题模式不合法")
     private String themeMode = "day";//白天黑夜护眼等
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

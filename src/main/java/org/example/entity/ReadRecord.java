@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ReadRecord")
 @Data
 public class ReadRecord {
     @Id
@@ -28,8 +27,6 @@ public class ReadRecord {
     public ReadRecord(Users user, Book book) {
         this.book=book;
         this.user=user;
-    }
-    public ReadRecord() {
     }
 
 }

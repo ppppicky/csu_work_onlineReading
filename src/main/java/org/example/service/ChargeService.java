@@ -15,13 +15,7 @@ public interface ChargeService {
      */
     Optional<ChargeDTO> getChargeInfoByBookId(int bookId);
 
-    /**
-     * 更新书籍的收费设置信息
-     */
     void updateChargeDetails(ChargeDTO chargeDTO);
 
-    /**
-     * 设置书籍收费状态（改为使用 DTO）
-     */
     void setBookChargeStatus(SetChargeStatusDTO setChargeStatusDTO);
 }

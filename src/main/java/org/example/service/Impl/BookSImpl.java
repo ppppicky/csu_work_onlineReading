@@ -281,7 +281,7 @@ public class BookSImpl implements BookService {
             BookChapterCombinationDTO result = parseEpub(bookFile);
             return CompletableFuture.completedFuture(result);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("EPUB 解析失败: {}", bookFile.getName(), e);
             return CompletableFuture.completedFuture(null);
         }
     }

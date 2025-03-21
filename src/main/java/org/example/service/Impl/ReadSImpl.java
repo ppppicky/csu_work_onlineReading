@@ -7,10 +7,14 @@ import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
 import org.example.dto.ReadingSettingDTO;
 import org.example.entity.*;
-import org.example.mapper.ReadMapper;
-import org.example.repository.*;
+import org.example.repository.BackgroundRepo;
+import org.example.repository.FontRepository;
+import org.example.repository.SettingRepo;
+import org.example.repository.UserRepository;
 import org.example.service.ReadService;
+import org.example.util.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,7 +56,11 @@ public class ReadSImpl implements ReadService {
     @Override
     public ReadingSettingDTO getUserSettings(Users user) {
         Users confirmUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("user not existed"));
+                .orElseThrow(() -> new GlobalException.UserNotFoundException("用户不存在 | ID=" + user.getUserId()));
+//        return settingRepo.findByUser(user)
+//                .map(this::convertToDTO)
+//                .orElseThrow(() -> new IllegalArgumentException("用户未配置阅读设置"));
+//    }
         ReadingSetting setting = settingRepo.findByUser(confirmUser)
                 .orElseThrow(() -> new IllegalArgumentException("setting not existed"));
 
@@ -66,6 +74,7 @@ public class ReadSImpl implements ReadService {
         dto.setThemeMode(setting.getThemeMode());
         dto.setUpdateTime(setting.getUpdateTime());
         return dto;
+
     }
     /**
      * 更新用户阅读设置
@@ -73,6 +82,7 @@ public class ReadSImpl implements ReadService {
      * @param settingDTO 阅读设置 DTO
      */
     @Override
+    @Async("ioThreadPool")
     public void updateUserSetting(Integer userId, ReadingSettingDTO settingDTO) {
         ReadingSetting setting = settingRepo.findByUser(userRepository.findById(userId).get()).
                 orElseGet(() -> {
@@ -80,7 +90,6 @@ public class ReadSImpl implements ReadService {
                     newSetting.setUser(userRepository.findById(userId).get());
                     return newSetting;
                 });
-
         // 设置背景
         BackgroundType backgroundType = settingDTO.getBackgroundType();
         if (backgroundType == BackgroundType.SOLID_COLOR) {
@@ -100,7 +109,8 @@ public class ReadSImpl implements ReadService {
         setting.setThemeMode(settingDTO.getThemeMode());
         setting.setUpdateTime(LocalDateTime.now());
         settingRepo.save(setting);
-    }
+   }
+
     /**
      * 添加字体文件到系统
      * @param file 上传的字体文件
@@ -142,8 +152,6 @@ public class ReadSImpl implements ReadService {
             String fontFamily = null;
 
             for (NameRecord record : nameTable.getNameRecords()) {
-
-                log.info(NameRecord.NAME_FULL_FONT_NAME + "   " + NameRecord.NAME_FONT_FAMILY_NAME);
 
                 if (record.getNameId() == NameRecord.NAME_FONT_FAMILY_NAME) { // Name ID 1 = Font Family Name
                     fontFamily = record.getString();

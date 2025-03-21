@@ -9,13 +9,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.nio.charset.StandardCharsets;
-
 @Slf4j
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
 
-    @Bean(name = "objectRedisTemplate")
+    @Bean
     public RedisTemplate<String, Object> ObjectRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -29,7 +27,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisTemplate<String, Integer> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         template.setKeySerializer(new StringRedisSerializer());
-     //   template.setValueSerializer(new StringRedisSerializer());
 
         template.setValueSerializer(new RedisSerializer<Integer>() {
 

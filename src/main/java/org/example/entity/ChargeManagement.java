@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "ChargeManagement")
 @Data
 public class ChargeManagement {
     @Id

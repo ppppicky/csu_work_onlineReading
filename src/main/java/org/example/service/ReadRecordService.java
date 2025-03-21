@@ -10,5 +10,4 @@ public interface ReadRecordService {
     ReadRecordDTO getLastRecordByUserId(int userId, int bookId);
 
     void processNewRecord(ReadRecordDTO record);
-
 }

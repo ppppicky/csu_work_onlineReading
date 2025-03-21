@@ -5,19 +5,11 @@ import io.minio.*;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 
-import net.coobird.thumbnailator.Thumbnails;
-import org.bytedeco.ffmpeg.global.avcodec;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.FFmpegFrameRecorder;
-import org.bytedeco.javacv.Frame;
-import org.example.entity.BackgroundType;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -36,11 +28,14 @@ public class BackgroundDealer {
     @Value("${minio.bucket.backgrounds}")
     private String permanentBucket;
     /**
-     * 存储文件到临时目录
+     * 存储文件到临时存储桶
+     * @param file
+     * @return 存储后的对象名称
+     * @throws Exception
      */
     public String saveTemporary(MultipartFile file) throws Exception {
         String objectName = "bg_"+ UUID.randomUUID() + "_" + file.getOriginalFilename();
-        log.info("objectname:   "+objectName);
+      //  log.info("objectname:   "+objectName);
         try (InputStream inputStream = file.getInputStream()) {
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -53,9 +48,17 @@ public class BackgroundDealer {
             return objectName;
         }
     }
-    // BackgroundFileDealer.java
+    /**
+     * 存储字节数组到临时存储桶
+     * @param fileData 待存储的字节数组
+     * @param fileName 原始文件名
+     * @param contentType
+     * @return 存储后的对象名称
+     * @throws Exception
+     */
     public String saveTemporary(byte[] fileData, String fileName, String contentType) throws Exception {
         String objectName = "bg_" + UUID.randomUUID() + "_" + fileName;
+
         try (InputStream inputStream = new ByteArrayInputStream(fileData)) {
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -65,32 +68,19 @@ public class BackgroundDealer {
                             .contentType(contentType)
                             .build()
             );
+
             return objectName;
         }
     }
-//    public byte[] saveTemporary(MultipartFile file) throws IOException {
-////        String filePath = TEMP_DIR + UUID.randomUUID() + "_" + file.getOriginalFilename();
-////        File tmp = new File(filePath);
-////        try (InputStream is = file.getInputStream();
-////             OutputStream os = new FileOutputStream(tmp)) {
-////            byte[] buffer = new byte[8192];
-////            int bytesRead;
-////            while ((bytesRead = is.read(buffer)) != -1) {
-////                os.write(buffer, 0, bytesRead);
-////            }
-////            return filePath;
-////        } catch (IOException e) {
-////            throw new RuntimeException("文件存储失败", e);
-////        }
-//
-//        return file.getBytes(); // 直接返回文件的 byte[]
-//
-//    }
 
     /**
-     * 将文件从临时存储移动到永久存储
+     * 将文件从临时存储桶移动到永久存储桶
+     * @param tempObjectName 临时存储桶中的对象名称
+     * @return 移动后的对象名称（与原名称一致）
+     * @throws Exception
      */
     public String moveToPermanent(String tempObjectName) throws Exception {
+        // 复制文件到永久存储桶
         minioClient.copyObject(
                 CopyObjectArgs.builder()
                         .source(CopySource.builder().bucket(tempBucket).object(tempObjectName).build())
@@ -98,6 +88,8 @@ public class BackgroundDealer {
                         .object(tempObjectName)
                         .build()
         );
+
+        // 复制文件到永久存储桶
         minioClient.removeObject(
                 RemoveObjectArgs.builder()
                         .bucket(tempBucket)
@@ -107,11 +99,17 @@ public class BackgroundDealer {
 
         return tempObjectName;
     }
-
+    /**
+     * 获取永久存储桶中文件的预签名URL
+     * @param objectName 存储桶中的对象名称
+     * @return 有效期为2小时的预签名URL
+     * @throws Exception
+     */
     public String getPresignedUrl(String objectName) throws Exception {
         return minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
-                        .method(Method.GET).bucket(permanentBucket).object(objectName)
+                        .method(Method.GET).
+                        bucket(permanentBucket).object(objectName)
                         .expiry(2, TimeUnit.HOURS).build()
         );
     }
@@ -165,11 +163,18 @@ public class BackgroundDealer {
 //        }
 //    }
 
+    /**
+     * 生成渐变背景图片
+     * @param gradientCss CSS渐变定义字符串（例如：linear-gradient(45deg, #ff0000, #00ff00)）
+     * @param width
+     * @param height
+     * @return 生成的渐变BufferedImage对象
+     */
     public BufferedImage generateGradientImage(String gradientCss, int width, int height) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
 
-        // 解析 CSS 颜色（这里简单处理两个颜色）
+        // 解析 CSS 颜色
         String[] colors = extractGradientColors(gradientCss);
         if (colors.length < 2) {
             throw new IllegalArgumentException("渐变定义无效，至少需要两个颜色");

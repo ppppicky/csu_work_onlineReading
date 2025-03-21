@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class CoverTempDTO {
 
- //private String previewUrl;
-private String tempKey;
+    //private String previewUrl;
+    private String tempKey;
     InputStreamResource image;
-  private byte[] imageData;
+    private byte[] imageData;
 }

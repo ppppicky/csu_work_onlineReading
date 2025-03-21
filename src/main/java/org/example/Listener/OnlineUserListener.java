@@ -1,28 +1,48 @@
 package org.example.Listener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
 @Component
-public class OnlineUserListener implements HttpSessionListener {
+public class OnlineUserListener {
 
-    private static final AtomicInteger onlineUsers = new AtomicInteger(0);
+    private static final String ONLINE_USERS_KEY = "ONLINE_USERS";
 
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        // 当会话创建时，在线用户数+1
-        onlineUsers.incrementAndGet();
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    /**
+     * 记录用户上线状态
+     */
+    public void userLoggedIn(String username) {
+        redisTemplate.opsForSet().add(ONLINE_USERS_KEY, username);
+        redisTemplate.expire(ONLINE_USERS_KEY, 1, TimeUnit.DAYS);
+        log.info("用户 {} 已上线", username);
     }
 
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
-        // 当会话销毁时，在线用户数-1
-        onlineUsers.decrementAndGet();
+    /**
+     * 记录用户下线状态
+     */
+    public void userLoggedOut(String username) {
+        Long removed = redisTemplate.opsForSet().remove(ONLINE_USERS_KEY, username);
+        if (removed != null && removed > 0) {
+            log.info("用户 {} 已从在线列表移除", username);
+        } else {
+            log.warn("尝试移除用户 {} 但其不在在线列表中", username);
+        }
     }
 
-    // 获取当前在线用户数
-    public static int getOnlineUsers() {
-        return onlineUsers.get();
+    /**
+     * 获取当前在线用户数
+     */
+    public int getOnlineUsers() {
+        Set<String> onlineUsers = redisTemplate.opsForSet().members(ONLINE_USERS_KEY);
+        return onlineUsers != null ? onlineUsers.size() : 0;
     }
 }

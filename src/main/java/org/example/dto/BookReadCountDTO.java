@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BookReadCountDTO {
-    private String bookName; // 书籍名称
-    private long readCount; // 阅读次数
+    private String bookName;
+    private long readCount;
 }

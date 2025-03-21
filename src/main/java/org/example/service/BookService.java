@@ -19,13 +19,13 @@ import java.util.concurrent.CompletableFuture;
 public interface BookService {
 
 
-    public Page<Book> getAllBook(int page, int size);
+    Page<Book> getAllBook(int page, int size);
 
-   // public Book addBook(File bookFile, String typeId, Byte isVip) throws IOException;
+    // public Book addBook(File bookFile, String typeId, Byte isVip) throws IOException;
 
-    public void deleteBook(Integer bookId);
+    void deleteBook(Integer bookId);
 
-    public Page<BookInfoDTO> getBooksByType(Pageable pageable, String bookTypeId);
+    Page<BookInfoDTO> getBooksByType(Pageable pageable, String bookTypeId);
 
     Page<BookInfoDTO> getBooksList(String keyword, Pageable pageable);
 
@@ -37,7 +37,8 @@ public interface BookService {
 
     void createBook(BookChapterCombinationDTO bookInfoDTO) throws IOException;
 
-    @Async("ioThreadPool") // 使用自定义线程池
+    @Async("ioThreadPool")
+        // 使用自定义线程池
     CompletableFuture<BookChapterCombinationDTO> parseEpubAsync(File bookFile);
 
     BookChapterCombinationDTO parseEpub(File tempFile) throws FileNotFoundException, IOException;
